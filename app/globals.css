@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom color palette */
+  --color-accent: #E3E3E3;
+  --color-accent-dim: #c8c8c8;
+  --color-bg: #0c132b;
+  --color-surface: #111a35;
+  --color-surface-2: #1a2440;
+  --color-text-primary: #f1f1f1;
+  --color-text-secondary: #8b8b9a;
+
+  /* Custom fonts */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
+}
+
+/* ─── Theme CSS variables ──────────────────────────────────────────────────── */
+:root {
+  --bg: #0c132b;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --surface: #111a35;
+  --surface-2: #1a2440;
+  --text-primary: #f1f1f1;
+  --text-secondary: #8b8b9a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(227, 227, 227, 0.25);
+  --accent: #E3E3E3;
+  --accent-dim: #c8c8c8;
+  --glow: rgba(227, 227, 227, 0.10);
+}
+
+[data-theme='light'] {
+  --bg: #f8f8fc;
+  --bg-card: rgba(0, 0, 0, 0.03);
+  --surface: #ffffff;
+  --surface-2: #f0f0f5;
+  --text-primary: #0a0a0f;
+  --text-secondary: #5a5a6a;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-accent: rgba(0, 170, 94, 0.25);
+  --accent: #00aa5e;
+  --accent-dim: #008f4f;
+  --glow: rgba(0, 170, 94, 0.12);
+}
+
+/* ─── Base reset ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* offset for sticky navbar */
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Custom scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+/* ─── Selection ────────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+
+/* ─── Focus ring ────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ─── Shared utility classes ────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 24px var(--glow);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.section-heading {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-heading span {
+  color: var(--accent);
+}
+
+.container-section {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  padding-block: 6rem;
+}
+
+/* ─── Floating animation for hero icons ────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.float-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ─── Gradient text ─────────────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, #00aaff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Timeline line ─────────────────────────────────────────────────────────── */
+.timeline-line {
+  position: relative;
+}
+
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  border-radius: 1px;
+}
+
+/* ─── Navbar backdrop ───────────────────────────────────────────────────────── */
+.navbar-glass {
+  background: rgba(12, 19, 43, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme='light'] .navbar-glass {
+  background: rgba(248, 248, 252, 0.80);
+}
+
+/* ─── Button styles ─────────────────────────────────────────────────────────── */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: var(--accent);
+  color: #0a0a0f;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-accent:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--glow);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: var(--glow);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--glow);
+}
+
+/* ─── Badge / chip ──────────────────────────────────────────────────────────── */
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.tech-chip:hover {
+  border-color: var(--border-accent);
+  color: var(--accent);
+}
