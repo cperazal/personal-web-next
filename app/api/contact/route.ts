@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import sgMail from '@sendgrid/mail'
+import nodemailer from 'nodemailer'
+import { buildContactHtml, buildContactText } from '@/lib/contact-email'
+
+// ─── SMTP transporter (module-level singleton) ────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT ?? 587),
+  secure: process.env.SMTP_SECURE === 'true', // true = 465/SSL, false = STARTTLS
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+})
 
 // ─── In-memory rate limiter (5 req / IP / 60 min) ────────────────────────────
 const rateMap = new Map<string, { count: number; resetAt: number }>()
@@ -51,31 +63,25 @@ export async function POST(req: NextRequest) {
   }
 
   // Sanitize to prevent header injection
-  const safeName = name.trim().slice(0, 200)
-  const safeEmail = email.trim().slice(0, 200)
+  const safeName    = name.trim().slice(0, 200)
+  const safeEmail   = email.trim().slice(0, 200)
   const safeSubject = subject.trim().slice(0, 200)
   const safeMessage = message.trim().slice(0, 5000)
 
-  // Send via SendGrid
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
-
-  const msg = {
-    to: process.env.EMAIL_TO!,
-    from: process.env.EMAIL_FROM!,
-    subject: safeSubject,
-    templateId: 'd-78c00b37a23e404eae9a840d972806c4',
-    dynamicTemplateData: {
-      name: safeName,
-      message: safeMessage,
-      email: safeEmail,
-    },
-  }
-
+  // Send via SMTP (Nodemailer)
   try {
-    await sgMail.send(msg)
+    await transporter.sendMail({
+      from: `"${safeName}" <${process.env.SMTP_USER}>`,
+      replyTo: safeEmail,
+      to: process.env.EMAIL_TO,
+      ...(process.env.EMAIL_CC ? { cc: process.env.EMAIL_CC } : {}),
+      subject: safeSubject,
+      html: buildContactHtml({ name: safeName, email: safeEmail, subject: safeSubject, message: safeMessage }),
+      text: buildContactText({ name: safeName, email: safeEmail, subject: safeSubject, message: safeMessage }),
+    })
     return NextResponse.json({ message: 'El correo ha sido enviado' })
   } catch (error) {
-    console.error('[contact] SendGrid error:', error)
+    console.error('[contact] SMTP error:', error)
     return NextResponse.json(
       { error: 'Ha ocurrido un error al enviar el email, por favor vuelve a intentarlo' },
       { status: 500 }
