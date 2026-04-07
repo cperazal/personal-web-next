@@ -76,6 +76,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
     languages: {
+      'x-default': SITE_URL,
       'en-US': SITE_URL,
       'es-419': SITE_URL,
     },
@@ -156,6 +157,11 @@ const jsonLd = {
         '@type': 'PostalAddress',
         addressCountry: 'CR',
       },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'professional',
+        url: `${SITE_URL}/#contact`,
+      },
     },
     {
       '@type': 'WebSite',
@@ -167,7 +173,7 @@ const jsonLd = {
       inLanguage: ['en-US', 'es-419'],
     },
     {
-      '@type': 'WebPage',
+      '@type': 'ProfilePage',
       '@id': `${SITE_URL}/#webpage`,
       url: SITE_URL,
       name: TITLE,
