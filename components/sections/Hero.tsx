@@ -26,13 +26,15 @@ const SOCIAL_ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = 
 const TYPEWRITER_SEQUENCE = [
   'Software Engineer',
   1800,
+  'Tech Lead',
+  1800,
+  '.NET Developer',
+  1800,
+  'AI Agents & MCP',
+  1800,
   'Backend Integration',
   1800,
   'Web Scraping',
-  1800,
-  'AI Integration',
-  1800,
-  'WhatsApp API Cloud',
   1800,
 ]
 

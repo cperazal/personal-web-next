@@ -13,7 +13,7 @@ interface AboutProps {
 }
 
 const STATS = (locale: string) => [
-  { label: locale === 'es-419' ? 'Años de experiencia' : 'Years of experience', value: `${new Date().getFullYear() - 2019}+` },
+  { label: locale === 'es-419' ? 'Años de experiencia' : 'Years of experience', value: `${new Date().getFullYear() - 2017}+` },
   { label: locale === 'es-419' ? 'Proyectos completados' : 'Projects completed', value: '50+' },
   { label: locale === 'es-419' ? 'Tecnologías' : 'Technologies', value: '20+' },
 ]
