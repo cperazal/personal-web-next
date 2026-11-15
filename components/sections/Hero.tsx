@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
-import { Github, Linkedin, Facebook, Twitter, Globe, ArrowDown, Mail } from 'lucide-react'
+import { Github, Linkedin, Facebook, Twitter, Globe, ArrowDown, Mail, FileDown, ChevronDown } from 'lucide-react'
 import type { PersonalInfo, Skill } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
 import { getPersonalInfo, getSkills } from '@/lib/contentful'
@@ -238,6 +238,7 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
             {locale === 'es-419' ? 'Contáctame' : 'Contact me'}
             <Mail size={15} />
           </button>
+          <CvDownload cv={person.cv} locale={locale} />
         </motion.div>
 
         {/* Social icons */}
@@ -295,5 +296,77 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
         />
       </motion.div>
     </section>
+  )
+}
+
+
+// ─── CV download (English / Spanish) ─────────────────────────────────────────
+function CvDownload({ cv, locale }: { cv?: PersonalInfo['cv']; locale: string }) {
+  const [open, setOpen] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const isEs = locale === 'es-419'
+
+  useEffect(() => {
+    if (!open) return
+    const onClick = (e: MouseEvent) => {
+      if (!wrapperRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  const options = [
+    { label: 'English', short: 'EN', href: cv?.en },
+    { label: 'Español', short: 'ES', href: cv?.es },
+  ].filter((o): o is { label: string; short: string; href: string } => Boolean(o.href))
+
+  if (options.length === 0) return null
+
+  return (
+    <div ref={wrapperRef} className="relative">
+      <button
+        type="button"
+        className="btn-outline"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {isEs ? 'Descargar CV' : 'Download CV'}
+        <FileDown size={15} />
+        <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }} />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute left-1/2 z-20 mt-2 w-44 -translate-x-1/2 overflow-hidden rounded-lg"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 12px 32px rgba(0,0,0,0.35)' }}
+        >
+          {options.map((o) => (
+            <a
+              key={o.short}
+              role="menuitem"
+              href={o.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              download
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-between px-4 py-2.5 text-sm transition-colors duration-150 hover:bg-[var(--bg-card)]"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <span>{o.label}</span>
+              <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{o.short} · PDF</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
