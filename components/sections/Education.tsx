@@ -8,6 +8,7 @@ import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { EducationItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
 import { getEducation } from '@/lib/contentful'
+import { formatMonthYear } from '@/lib/format'
 
 interface EducationProps {
   initialData: EducationItem[]
@@ -107,8 +108,8 @@ export default function Education({ initialData }: EducationProps) {
 
                 <div className="flex items-center gap-1 text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>
                   <Calendar size={11} />
-                  {edu.fechaDeInicio}
-                  {edu.fechaDeCulminacion && ` — ${edu.fechaDeCulminacion}`}
+                  {formatMonthYear(edu.fechaDeInicio, locale)}
+                  {edu.fechaDeCulminacion && ` — ${formatMonthYear(edu.fechaDeCulminacion, locale)}`}
                 </div>
               </div>
             </motion.div>

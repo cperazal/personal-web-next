@@ -7,6 +7,7 @@ import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { ExperienceItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
 import { getExperience } from '@/lib/contentful'
+import { formatMonthYear } from '@/lib/format'
 
 interface ExperienceProps {
   initialData: ExperienceItem[]
@@ -124,9 +125,11 @@ export default function Experience({ initialData }: ExperienceProps) {
 
                     <div className="flex items-center gap-1 text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>
                       <Calendar size={11} />
-                      {exp.fechaInicio}
+                      {formatMonthYear(exp.fechaInicio, locale)}
                       {' — '}
-                      {exp.fechaCulminacion ?? (locale === 'es-419' ? 'Presente' : 'Present')}
+                      {exp.fechaCulminacion
+                        ? formatMonthYear(exp.fechaCulminacion, locale)
+                        : (locale === 'es-419' ? 'Presente' : 'Present')}
                     </div>
                   </div>
 

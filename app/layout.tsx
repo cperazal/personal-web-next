@@ -9,9 +9,9 @@ import './globals.css'
 const SITE_URL = 'https://carlosperaza.dev'
 const SITE_NAME = 'carlosperaza.dev'
 const FULL_NAME = 'Carlos Peraza'
-const TITLE = 'Carlos Peraza — Software Engineer'
+const TITLE = 'Carlos Peraza — Software Engineer | Tech Lead'
 const DESCRIPTION =
-  'Software Engineer specializing in Backend Integration, Web Scraping, AI Integration, and WhatsApp API Cloud. Building scalable systems and modern web applications.'
+  'Software Engineer and Tech Lead with 9+ years of experience building APIs, integrations, and web applications with .NET, React, and Python. Currently focused on AI agents and MCP.'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 const geistSans = Geist({
@@ -39,15 +39,16 @@ export const metadata: Metadata = {
   keywords: [
     'Carlos Peraza',
     'Software Engineer',
-    'Backend Developer',
+    'Tech Lead',
+    '.NET Developer',
     'Full Stack Developer',
-    'Web Developer',
+    'Backend Developer',
     'Next.js Developer',
-    'Node.js Developer',
+    'React Developer',
     'Python Developer',
+    'AI Agents',
+    'MCP',
     'Web Scraping',
-    'AI Integration',
-    'WhatsApp API Cloud',
     'REST API',
     'Costa Rica',
     'Venezuela',
@@ -96,7 +97,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: `${FULL_NAME} — Software Engineer Portfolio`,
+        alt: `${FULL_NAME} — Software Engineer | Tech Lead Portfolio`,
         type: 'image/jpeg',
       },
     ],
@@ -134,24 +135,25 @@ const jsonLd = {
       '@id': `${SITE_URL}/#person`,
       name: FULL_NAME,
       url: SITE_URL,
-      jobTitle: 'Software Engineer',
+      jobTitle: 'Software Engineer | Tech Lead',
       description: DESCRIPTION,
       image: `${SITE_URL}/og-image.jpg`,
       sameAs: [
         'https://github.com/cperazal',
-        'https://linkedin.com/in/carlosperaza',
+        'https://www.linkedin.com/in/cperazal',
       ],
       knowsAbout: [
-        'Backend Integration',
-        'Web Scraping',
-        'AI Integration',
-        'WhatsApp API Cloud',
+        '.NET',
+        'C#',
+        'React',
         'Next.js',
-        'Node.js',
         'Python',
+        'SQL Server',
         'REST APIs',
-        'Docker',
-        'PostgreSQL',
+        'CI/CD',
+        'AI Agents',
+        'Model Context Protocol (MCP)',
+        'Web Scraping',
       ],
       address: {
         '@type': 'PostalAddress',

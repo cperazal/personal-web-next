@@ -101,7 +101,13 @@ export async function getExperience(locale: Locale = 'en-US'): Promise<Experienc
     descripcion: item.fields.descripcion ?? '',
     imagen: mapAsset(item.fields.imagen),
     tecnologias: Array.isArray(item.fields.tecnologias) ? item.fields.tecnologias : [],
-  }))
+  })).sort((a: ExperienceItem, b: ExperienceItem) => {
+    // Current jobs first, then most recent end date, then most recent start date
+    const endA = a.fechaCulminacion ?? '9999-12-31'
+    const endB = b.fechaCulminacion ?? '9999-12-31'
+    if (endA !== endB) return endB.localeCompare(endA)
+    return b.fechaInicio.localeCompare(a.fechaInicio)
+  })
 }
 
 // ─── Education ────────────────────────────────────────────────────────────────
