@@ -49,6 +49,22 @@ export async function getPersonalInfo(locale: Locale = 'en-US'): Promise<Persona
     content_type: 'personal_information',
     locale,
   })
+  // The CV link is not localized, but its file is (en-US / es-419).
+  // Fetch the asset with all locales so both versions are always available.
+  const cvId: string | undefined = res.items[0]?.fields?.cv?.sys?.id
+  let cv: PersonalInfo['cv'] = null
+  if (cvId) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const asset = await (client as any).getAsset(cvId, { locale: '*' })
+      const files = asset?.fields?.file ?? {}
+      const toUrl = (f?: { url?: string }) => (f?.url ? `https:${f.url}` : null)
+      const en = toUrl(files['en-US'])
+      cv = { en, es: toUrl(files['es-419']) ?? en }
+    } catch {
+      cv = null
+    }
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res.items.map((item: any): PersonalInfo => ({
     nombre: item.fields.nombre ?? '',
@@ -62,6 +78,7 @@ export async function getPersonalInfo(locale: Locale = 'en-US'): Promise<Persona
     correo: item.fields.correo ?? '',
     web: item.fields.web ?? null,
     foto: mapAsset(item.fields.foto),
+    cv,
   }))
 }
 

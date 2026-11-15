@@ -20,6 +20,8 @@ export interface PersonalInfo {
   correo: string
   web?: string | null
   foto?: ContentfulImage | null
+  /** Downloadable CV per language (the CV asset's file is localized in Contentful) */
+  cv?: { en: string | null; es: string | null } | null
 }
 
 export interface Skill {
