@@ -134,13 +134,57 @@ const jsonLd = {
       '@type': 'Person',
       '@id': `${SITE_URL}/#person`,
       name: FULL_NAME,
+      givenName: 'Carlos',
+      familyName: 'Peraza',
+      alternateName: 'cperazal',
       url: SITE_URL,
+      email: 'mailto:info@carlosperaza.dev',
       jobTitle: 'Software Engineer | Tech Lead',
       description: DESCRIPTION,
       image: `${SITE_URL}/og-image.jpg`,
       sameAs: [
-        'https://github.com/cperazal',
         'https://www.linkedin.com/in/cperazal',
+        'https://github.com/cperazal',
+        'https://x.com/cperazal',
+        'https://www.facebook.com/cperazal',
+      ],
+      worksFor: {
+        '@type': 'Organization',
+        name: 'tucalzado.com',
+        url: 'https://tucalzado.com',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'San José',
+          addressCountry: 'CR',
+        },
+      },
+      hasOccupation: {
+        '@type': 'Occupation',
+        name: 'Tech Lead & .NET Developer',
+        occupationLocation: { '@type': 'City', name: 'San José, Costa Rica' },
+        skills: '.NET, C#, React, Next.js, Python, SQL Server, CI/CD, AI agents, MCP',
+      },
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Universidad Centroccidental Lisandro Alvarado',
+        alternateName: 'UCLA',
+        url: 'https://www.ucla.edu.ve',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Barquisimeto',
+          addressCountry: 'VE',
+        },
+      },
+      hasCredential: {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'degree',
+        name: 'Bachelor of Science in Informatics Engineering (Ingeniería en Informática)',
+        recognizedBy: { '@type': 'CollegeOrUniversity', name: 'Universidad Centroccidental Lisandro Alvarado' },
+        dateCreated: '2017-12',
+      },
+      knowsLanguage: [
+        { '@type': 'Language', name: 'Spanish', alternateName: 'es' },
+        { '@type': 'Language', name: 'English', alternateName: 'en' },
       ],
       knowsAbout: [
         '.NET',
@@ -157,6 +201,7 @@ const jsonLd = {
       ],
       address: {
         '@type': 'PostalAddress',
+        addressLocality: 'San José',
         addressCountry: 'CR',
       },
       contactPoint: {
