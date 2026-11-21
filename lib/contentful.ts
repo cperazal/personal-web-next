@@ -189,3 +189,31 @@ export async function getCertificates(locale: Locale = 'en-US'): Promise<Certifi
     thumbnails: mapAsset(item.fields.thumbnails),
   }))
 }
+
+// ─── Last content update (for sitemap lastmod) ────────────────────────────────
+// Returns the most recent `sys.updatedAt` among the content types shown on the
+// home page, so the sitemap reports when the content really changed.
+const HOME_CONTENT_TYPES = [
+  'personal_information',
+  'experienciaLaboral',
+  'educacion',
+  'proyectos',
+  'certificados',
+]
+
+export async function getLastContentUpdate(): Promise<Date | null> {
+  try {
+    const client = getClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res = await (client as any).getEntries({
+      'sys.contentType.sys.id[in]': HOME_CONTENT_TYPES.join(','),
+      order: '-sys.updatedAt',
+      select: 'sys.updatedAt',
+      limit: 1,
+    })
+    const updatedAt: string | undefined = res.items[0]?.sys?.updatedAt
+    return updatedAt ? new Date(updatedAt) : null
+  } catch {
+    return null
+  }
+}

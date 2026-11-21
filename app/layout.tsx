@@ -11,7 +11,7 @@ const SITE_NAME = 'carlosperaza.dev'
 const FULL_NAME = 'Carlos Peraza'
 const TITLE = 'Carlos Peraza — Software Engineer | Tech Lead'
 const DESCRIPTION =
-  'Software Engineer and Tech Lead with 9+ years of experience building APIs, integrations, and web applications with .NET, React, and Python. Currently focused on AI agents and MCP.'
+  'Software Engineer and Tech Lead in Costa Rica with 9+ years building APIs and web apps with .NET, React, and Python. Now building AI agents and MCP.'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 const geistSans = Geist({
