@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from 'react'
 import type { Locale } from '@/lib/types'
-import { HOME_PATH, langFromLocale } from '@/lib/i18n'
+import { langFromLocale, switchLangPath } from '@/lib/i18n'
 
 // The language comes from the URL ("/" = English, "/es" = Spanish), so the
 // server renders the right language and each version has its own indexable URL.
@@ -24,7 +24,8 @@ const LocaleContext = createContext<LocaleContextValue>({
 export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
   const setLocale = (next: Locale) => {
     if (next === locale) return
-    window.location.assign(`${HOME_PATH[langFromLocale(next)]}${window.location.hash}`)
+    const target = switchLangPath(window.location.pathname, langFromLocale(next))
+    window.location.assign(`${target}${window.location.hash}`)
   }
 
   return (

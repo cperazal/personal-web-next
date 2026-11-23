@@ -64,6 +64,15 @@ export interface ProjectItem {
   descripcion: string
   imagen?: ContentfulImage | null
   tecnologias?: string[]
+  /* Case study fields (optional in Contentful). A project gets its own page at
+     /projects/[slug] only when it has a slug and a solution. */
+  slug?: string | null
+  rol?: string | null
+  fecha?: string | null
+  problema?: string | null
+  solucion?: string | null
+  resultado?: string | null
+  updatedAt?: string | null
 }
 
 export interface CertificadoItem {

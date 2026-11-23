@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Github } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import { useRouter } from 'next/navigation'
 import { useLocale } from '@/context/locale-context'
+import { HOME_PATH, langFromLocale } from '@/lib/i18n'
 
 const NAV_LINKS = [
   { href: '#about', label: { 'en-US': 'About', 'es-419': 'Sobre Mí' } },
@@ -19,6 +21,7 @@ const SECTION_IDS = ['hero', 'about', 'experience', 'skills', 'projects', 'educa
 
 export default function Navbar() {
   const { locale, setLocale } = useLocale()
+  const router = useRouter()
   const [activeSection, setActiveSection] = useState('hero')
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -55,9 +58,11 @@ export default function Navbar() {
   const scrollTo = useCallback((href: string) => {
     const id = href.replace('#', '')
     const el = document.getElementById(id)
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
     setMobileOpen(false)
-  }, [])
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+    // On other pages (e.g. a project page) go back to the home section
+    else router.push(`${HOME_PATH[langFromLocale(locale)]}${href}`)
+  }, [locale, router])
 
   return (
     <>

@@ -32,8 +32,8 @@ Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (In
 
 ## Selected projects
 
-- BCR Tucán integration (tucalzado.com): VB.NET / .NET Framework web service connecting the company to Banco de Costa Rica's collection service for bill payments and balance top-ups
-- BN Servicios integration (tucalzado.com): SOAP web service integration with Banco Nacional de Costa Rica's collection service
+- [BCR Tucán integration](https://carlosperaza.dev/projects/bcr-tucan-integration) (tucalzado.com, 2019): VB.NET / .NET Framework web service connecting the company to Banco de Costa Rica's collection service for bill payments and balance top-ups
+- [BN Servicios integration](https://carlosperaza.dev/projects/bn-servicios-integration) (tucalzado.com, 2019): SOAP web service integration with Banco Nacional de Costa Rica's collection service
 - DIMOI electronic invoicing (tucalzado.com): .NET Framework web service that transmits the company's invoices to DIMOI (Costa Rica) through a REST API
 - Comfiar integration: Windows service in VB.NET that sends electronic invoices in Colombia via SOAP
 - ASBANC integration: VB.NET web services connecting an ERP system with ASBANC (Peru)
@@ -41,7 +41,7 @@ Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (In
 - [TCAprende](https://tcaprende.tucalzado.com/): e-learning web app with Next.js, React, C# REST APIs, SQL Server, Vercel and Azure
 - [tcmarcas.com](https://tcmarcas.com): e-commerce site with Next.js, React and a VB.NET / SQL Server backend
 - [Workout INC](https://www.workout.com.pa/workout/): e-commerce web app with React, VB.NET and SQL Server (Panama)
-- Harvard University web scraping: Python (Requests, Beautiful Soup, PostgreSQL) project that extracted about 300,000 records for a PhD dissertation
+- [Harvard University web scraping](https://carlosperaza.dev/projects/harvard-web-scraping) (2019): Python (Requests, Beautiful Soup, PostgreSQL) project that extracted about 300,000 records for a PhD dissertation
 - [Mercado Libre crawler](https://github.com/cperazal/mercadolibre-crawler): Scrapy project that extracts Mercado Libre search results
 - [Simple WA](https://simplewa.carlosperaza.dev): Next.js PWA to send WhatsApp messages without adding contacts
 

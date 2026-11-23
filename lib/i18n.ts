@@ -36,6 +36,29 @@ export const HOME_URL: Record<Lang, string> = {
   es: `${SITE_URL}/es`,
 }
 
+/** Public path of any page in a language: localePath('es', '/projects/x') → '/es/projects/x' */
+export function localePath(lang: Lang, path: string): string {
+  const clean = path === '/' ? '' : path
+  return lang === 'es' ? `/es${clean}` : clean || '/'
+}
+
+/** Same page in the other language, from a public pathname */
+export function switchLangPath(pathname: string, target: Lang): string {
+  const base = pathname === '/es' ? '/' : pathname.startsWith('/es/') ? pathname.slice(3) : pathname
+  return localePath(target, base)
+}
+
+/** Absolute URL of any page in a language */
+export function absoluteUrl(lang: Lang, path: string): string {
+  const p = localePath(lang, path)
+  return p === '/' ? SITE_URL : `${SITE_URL}${p}`
+}
+
+/** hreflang map for any page path (e.g. '/projects/x') */
+export function hreflangFor(path: string) {
+  return { en: absoluteUrl('en', path), es: absoluteUrl('es', path), 'x-default': absoluteUrl('en', path) }
+}
+
 /** hreflang map shared by metadata and sitemap */
 export const HREFLANG = {
   en: HOME_URL.en,

@@ -9,6 +9,8 @@ import type {
   CertificadoItem,
   ContentfulImage,
 } from './types'
+import { hasCaseStudy } from './projects'
+export { hasCaseStudy }
 
 // ─── Client factory ───────────────────────────────────────────────────────────
 // Supports both NEXT_PUBLIC_ (client-safe) and server-only env var names.
@@ -156,8 +158,12 @@ export async function getProjects(locale: Locale = 'en-US'): Promise<ProjectItem
     content_type: 'proyectos',
     locale,
   })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return res.items.map((item: any): ProjectItem => ({
+  return res.items.map(mapProject)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapProject(item: any): ProjectItem {
+  return {
     id: item.sys.id,
     titulo: item.fields.titulo ?? '',
     empresa: item.fields.empresa ?? null,
@@ -165,7 +171,32 @@ export async function getProjects(locale: Locale = 'en-US'): Promise<ProjectItem
     descripcion: item.fields.descripcion ?? '',
     imagen: mapAsset(item.fields.imagen),
     tecnologias: Array.isArray(item.fields.tecnologias) ? item.fields.tecnologias : [],
-  }))
+    slug: item.fields.slug ?? null,
+    rol: item.fields.rol ?? null,
+    fecha: item.fields.fecha ?? null,
+    problema: item.fields.problema ?? null,
+    solucion: item.fields.solucion ?? null,
+    resultado: item.fields.resultado ?? null,
+    updatedAt: item.sys.updatedAt ?? null,
+  }
+}
+
+/** Projects that have their own case-study page (used for static params and sitemap) */
+export async function getCaseStudies(locale: Locale = 'en-US'): Promise<ProjectItem[]> {
+  try {
+    return (await getProjects(locale)).filter(hasCaseStudy)
+  } catch {
+    return []
+  }
+}
+
+/** A single case study by slug (there are only a few projects, so filter in memory) */
+export async function getProjectBySlug(
+  slug: string,
+  locale: Locale = 'en-US'
+): Promise<ProjectItem | null> {
+  const projects = await getCaseStudies(locale)
+  return projects.find((p) => p.slug === slug) ?? null
 }
 
 // ─── Certificates / Rewards ───────────────────────────────────────────────────
