@@ -1,12 +1,10 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink, Calendar, MapPin, Briefcase } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { ExperienceItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getExperience } from '@/lib/contentful'
 import { formatMonthYear } from '@/lib/format'
 
 interface ExperienceProps {
@@ -15,14 +13,7 @@ interface ExperienceProps {
 
 export default function Experience({ initialData }: ExperienceProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getExperience(locale).then(setData)
-  }, [locale])
-
+  const data = initialData
   return (
     <SectionWrapper id="experience">
       <div className="container-section">

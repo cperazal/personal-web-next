@@ -1,13 +1,11 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { ExternalLink, Download, Award } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { CertificadoItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getCertificates } from '@/lib/contentful'
 
 interface RewardsProps {
   initialData: CertificadoItem[]
@@ -15,14 +13,7 @@ interface RewardsProps {
 
 export default function Rewards({ initialData }: RewardsProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getCertificates(locale).then(setData)
-  }, [locale])
-
+  const data = initialData
   return (
     <SectionWrapper id="rewards">
       <div className="container-section">

@@ -1,13 +1,11 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { ExternalLink, Calendar, MapPin, GraduationCap } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { EducationItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getEducation } from '@/lib/contentful'
 import { formatMonthYear } from '@/lib/format'
 
 interface EducationProps {
@@ -16,14 +14,7 @@ interface EducationProps {
 
 export default function Education({ initialData }: EducationProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getEducation(locale).then(setData)
-  }, [locale])
-
+  const data = initialData
   return (
     <SectionWrapper id="education">
       <div className="container-section">

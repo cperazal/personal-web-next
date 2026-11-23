@@ -1,13 +1,14 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { ExternalLink } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, ExternalLink } from 'lucide-react'
+import { hasCaseStudy } from '@/lib/projects'
+import { langFromLocale, localePath } from '@/lib/i18n'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { ProjectItem } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getProjects } from '@/lib/contentful'
 
 interface ProjectsProps {
   initialData: ProjectItem[]
@@ -100,6 +101,18 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
             ))}
           </div>
         )}
+
+        {/* Case study link */}
+        {hasCaseStudy(project) && (
+          <Link
+            href={localePath(langFromLocale(locale), `/projects/${project.slug}`)}
+            className="inline-flex items-center gap-1.5 text-sm font-mono mt-1 w-fit"
+            style={{ color: 'var(--accent)', textDecoration: 'none' }}
+          >
+            {locale === 'es-419' ? 'Ver caso de estudio' : 'Read case study'}
+            <ArrowRight size={14} />
+          </Link>
+        )}
       </div>
     </motion.article>
   )
@@ -107,14 +120,7 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
 
 export default function Projects({ initialData }: ProjectsProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getProjects(locale).then(setData)
-  }, [locale])
-
+  const data = initialData
   return (
     <SectionWrapper id="projects">
       <div className="container-section">

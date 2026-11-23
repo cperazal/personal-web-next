@@ -1,5 +1,4 @@
-import { cookies } from 'next/headers'
-import type { Locale } from '@/lib/types'
+import { CONTENTFUL_LOCALE, isLang } from '@/lib/i18n'
 import {
   getPersonalInfo,
   getSkills,
@@ -17,12 +16,13 @@ import Education from '@/components/sections/Education'
 import Rewards from '@/components/sections/Rewards'
 import Contact from '@/components/sections/Contact'
 
+// Static at build time, regenerated in the background at most once a minute (ISR)
 export const revalidate = 60
 
-export default async function Page() {
-  // Read locale from cookie server-side for consistent initial render
-  const cookieStore = await cookies()
-  const locale = ((cookieStore.get('locale')?.value) as Locale | undefined) ?? 'en-US'
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  // The language comes from the URL: "/" = English, "/es" = Spanish
+  const { lang } = await params
+  const locale = CONTENTFUL_LOCALE[isLang(lang) ? lang : 'en']
 
   // Fetch all data in parallel
   const [personalInfo, skills, experience, education, projects, certificates] =
@@ -55,9 +55,9 @@ export default async function Page() {
         }}
       >
         <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' }}>
-          Built with{' '}
+          {lang === 'es' ? 'Hecho con' : 'Built with'}{' '}
           <span style={{ color: 'var(--accent)' }}>Next.js 15 + Tailwind v4 + Framer Motion</span>
-          {' '}— Content powered by{' '}
+          {' '}— {lang === 'es' ? 'Contenido gestionado con' : 'Content powered by'}{' '}
           <span style={{ color: 'var(--accent)' }}>Contentful CMS</span>
         </div>
       </footer>
