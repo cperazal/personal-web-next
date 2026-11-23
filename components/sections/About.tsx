@@ -1,12 +1,10 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Mail, Globe } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { PersonalInfo } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getPersonalInfo } from '@/lib/contentful'
 
 interface AboutProps {
   initialData: PersonalInfo[]
@@ -20,14 +18,7 @@ const STATS = (locale: string) => [
 
 export default function About({ initialData }: AboutProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getPersonalInfo(locale).then(setData)
-  }, [locale])
-
+  const data = initialData
   const person = data[0]
   if (!person) return null
 

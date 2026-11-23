@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { getLastContentUpdate } from '@/lib/contentful'
-
-const SITE_URL = 'https://carlosperaza.dev'
+import { HOME_URL, HREFLANG } from '@/lib/i18n'
 
 // Fallback used only if Contentful can't be reached. Update it when the site's
 // code or static content changes in a meaningful way.
@@ -15,12 +14,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified =
     contentUpdated && contentUpdated > SITE_LAST_UPDATED ? contentUpdated : SITE_LAST_UPDATED
 
+  const alternates = { languages: HREFLANG }
+
   return [
-    {
-      url: SITE_URL,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 1.0,
-    },
+    { url: HOME_URL.en, lastModified, changeFrequency: 'monthly', priority: 1.0, alternates },
+    { url: HOME_URL.es, lastModified, changeFrequency: 'monthly', priority: 0.9, alternates },
   ]
 }

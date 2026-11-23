@@ -1,12 +1,10 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SkillBar from '@/components/ui/SkillBar'
 import type { Skill } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getSkills } from '@/lib/contentful'
 
 interface SkillsProps {
   initialData: Skill[]
@@ -14,14 +12,7 @@ interface SkillsProps {
 
 export default function Skills({ initialData }: SkillsProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getSkills().then(setData)
-  }, [locale])
-
+  const data = initialData
   // Sort by level descending
   const sorted = [...data].sort((a, b) => b.nivel - a.nivel)
 

@@ -1,24 +1,16 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
 import type { Locale } from '@/lib/types'
+import { HOME_PATH, langFromLocale } from '@/lib/i18n'
 
-// ─── Cookie helpers (no external dep) ────────────────────────────────────────
-function getLocaleCookie(): Locale | null {
-  if (typeof document === 'undefined') return null
-  const match = document.cookie.match(/(?:^|;\s*)locale=([^;]*)/)
-  const val = match ? decodeURIComponent(match[1]) : null
-  return val === 'es-419' || val === 'en-US' ? val : null
-}
+// The language comes from the URL ("/" = English, "/es" = Spanish), so the
+// server renders the right language and each version has its own indexable URL.
+// Switching language loads the other URL, keeping the current #section.
+// app/[lang]/layout.tsx is the root layout (it sets <html lang>), so changing
+// language is a full page load either way; a plain navigation lets the browser
+// restore the #section natively.
 
-function setLocaleCookie(value: Locale): void {
-  if (typeof document !== 'undefined') {
-    const maxAge = 365 * 24 * 60 * 60
-    document.cookie = `locale=${encodeURIComponent(value)};path=/;max-age=${maxAge};SameSite=Lax`
-  }
-}
-
-// ─── Context ──────────────────────────────────────────────────────────────────
 interface LocaleContextValue {
   locale: Locale
   setLocale: (lang: Locale) => void
@@ -29,17 +21,10 @@ const LocaleContext = createContext<LocaleContextValue>({
   setLocale: () => {},
 })
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en-US')
-
-  useEffect(() => {
-    const saved = getLocaleCookie()
-    if (saved) setLocaleState(saved)
-  }, [])
-
-  const setLocale = (lang: Locale) => {
-    setLocaleState(lang)
-    setLocaleCookie(lang)
+export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+  const setLocale = (next: Locale) => {
+    if (next === locale) return
+    window.location.assign(`${HOME_PATH[langFromLocale(next)]}${window.location.hash}`)
   }
 
   return (

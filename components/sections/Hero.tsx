@@ -1,13 +1,11 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { Github, Linkedin, Facebook, Twitter, Globe, ArrowDown, Mail, FileDown, ChevronDown } from 'lucide-react'
 import type { PersonalInfo, Skill } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getPersonalInfo, getSkills } from '@/lib/contentful'
-import { useState } from 'react'
 
 interface HeroProps {
   initialPersonalInfo: PersonalInfo[]
@@ -58,20 +56,13 @@ const FLOATING_ICON_NAMES: string[] = [
 
 export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) {
   const { locale } = useLocale()
-  const [personalInfo, setPersonalInfo] = useState(initialPersonalInfo)
-  const [skills, setSkills] = useState(initialSkills)
+  const personalInfo = initialPersonalInfo
+  const skills = initialSkills
   const [floatingMounted, setFloatingMounted] = useState(false)
-  const isMounted = useRef(false)
 
   useEffect(() => {
     setFloatingMounted(true)
   }, [])
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getPersonalInfo(locale).then(setPersonalInfo)
-    getSkills().then(setSkills)
-  }, [locale])
 
   const person = personalInfo[0]
   if (!person) return null
@@ -160,8 +151,8 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
         <motion.p
           className="font-mono text-sm tracking-widest uppercase"
           style={{ color: 'var(--accent)' }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           {locale === 'es-419' ? '👋 Hola, soy' : '👋 Hi there, I\'m'}
@@ -175,8 +166,8 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
             lineHeight: 1.1,
             color: 'var(--text-primary)',
           }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 24 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.55, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
         >
           {person.nombre}
@@ -210,8 +201,8 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
             color: 'var(--text-secondary)',
             fontSize: 'clamp(0.9rem, 1.5vw, 1.05rem)',
           }}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
           {person.descripcion}
@@ -220,8 +211,8 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
         {/* CTA buttons */}
         <motion.div
           className="flex flex-wrap items-center justify-center gap-3"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.5, delay: 0.75 }}
         >
           <button
@@ -244,8 +235,8 @@ export default function Hero({ initialPersonalInfo, initialSkills }: HeroProps) 
         {/* Social icons */}
         <motion.div
           className="flex items-center gap-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ y: 12 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.5, delay: 0.9 }}
         >
           {socials.map(({ key, href }) => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Github, Linkedin, Facebook, Twitter, Send } from 'lucide-react'
 import { toast, ToastContainer } from 'react-toastify'
@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import type { PersonalInfo } from '@/lib/types'
 import { useLocale } from '@/context/locale-context'
-import { getPersonalInfo } from '@/lib/contentful'
 
 interface ContactProps {
   initialData: PersonalInfo[]
@@ -23,16 +22,9 @@ const SOCIAL_LINKS = [
 
 export default function Contact({ initialData }: ContactProps) {
   const { locale } = useLocale()
-  const [data, setData] = useState(initialData)
-  const isMounted = useRef(false)
-
+  const data = initialData
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
-
-  useEffect(() => {
-    if (!isMounted.current) { isMounted.current = true; return }
-    getPersonalInfo(locale).then(setData)
-  }, [locale])
 
   const person = data[0]
 

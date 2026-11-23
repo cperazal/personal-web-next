@@ -2,7 +2,7 @@
 
 > Software Engineer and Tech Lead based in San José, Costa Rica, with 9+ years of experience building APIs, integrations, and web applications with .NET, React, Next.js, and Python. Currently leads the tech team at tucalzado.com and builds AI agents and Model Context Protocol (MCP) integrations for real business processes.
 
-Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (Ingeniería en Informática) from Universidad Centroccidental Lisandro Alvarado, Venezuela (2017). He works in Spanish (native) and English (B1). This site is available in English and Spanish.
+Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (Ingeniería en Informática) from Universidad Centroccidental Lisandro Alvarado, Venezuela (2017). He works in Spanish (native) and English (B1). This site is available in English (https://carlosperaza.dev) and Spanish (https://carlosperaza.dev/es).
 
 ## Profile
 
@@ -57,4 +57,4 @@ Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (In
 ## Optional
 
 - [Letter of recommendation, Harvard University](https://carlosperaza.dev/#rewards): Recommendation letter from the Department of Government for the web scraping project
-- [Spanish version / Versión en español](https://carlosperaza.dev): Use the language switch on the site (a dedicated /es URL is coming)
+- [Spanish version / Versión en español](https://carlosperaza.dev/es): Same profile in Spanish
