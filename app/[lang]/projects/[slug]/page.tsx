@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { getCaseStudies, getProjectBySlug } from '@/lib/contentful'
+import { getCaseStudies, getProjectBySlug } from '@/lib/data/content'
 import {
   CONTENTFUL_LOCALE,
   SEO,

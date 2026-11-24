@@ -7,7 +7,7 @@ import type {
   EducationItem,
   ProjectItem,
   CertificadoItem,
-  ContentfulImage,
+  ImageAsset,
 } from './types'
 import { hasCaseStudy } from './projects'
 export { hasCaseStudy }
@@ -33,7 +33,7 @@ function getClient() {
 
 // ─── Asset helper ─────────────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapAsset(asset: any): ContentfulImage | null {
+function mapAsset(asset: any): ImageAsset | null {
   if (!asset?.fields?.file?.url) return null
   return {
     url: `https:${asset.fields.file.url}`,

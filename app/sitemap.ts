@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getCaseStudies, getLastContentUpdate } from '@/lib/contentful'
+import { getCaseStudies, getLastContentUpdate } from '@/lib/data/content'
 import { HOME_URL, HREFLANG, absoluteUrl, hreflangFor } from '@/lib/i18n'
 
 // Fallback used only if Contentful can't be reached. Update it when the site's

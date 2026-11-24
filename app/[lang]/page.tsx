@@ -6,7 +6,7 @@ import {
   getEducation,
   getProjects,
   getCertificates,
-} from '@/lib/contentful'
+} from '@/lib/data/content'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
 import Experience from '@/components/sections/Experience'
