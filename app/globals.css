@@ -45,9 +45,12 @@
 }
 
 /* ─── Base reset ───────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
+/* Unlayered reset for the public site. The admin panel (.admin-root) is excluded
+   so Tailwind's spacing utilities work there (Tailwind's own preflight still
+   resets margins/padding in the base layer). */
+:where(*:not(.admin-root *)),
+:where(*:not(.admin-root *))::before,
+:where(*:not(.admin-root *))::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -240,4 +243,62 @@ body {
 .tech-chip:hover {
   border-color: var(--border-accent);
   color: var(--accent);
+}
+
+/* ─── Admin panel ─────────────────────────────────────────────────────────── */
+.admin-input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+.admin-input:focus-within,
+.admin-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+textarea.admin-input {
+  resize: vertical;
+  line-height: 1.6;
+}
+.admin-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.admin-help {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+.admin-error {
+  font-size: 0.8rem;
+  color: #fca5a5;
+}
+.admin-lang-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0 0.35rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+}
+.admin-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+.admin-icon-btn:hover:not(:disabled) {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+.admin-icon-btn:disabled {
+  opacity: 0.3;
 }

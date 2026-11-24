@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" data-theme="dark" className={`${geistSans.variable} ${jetbrainsMono.variable}`}>
-      <body>{children}</body>
+      <body className="admin-root">{children}</body>
     </html>
   )
 }
