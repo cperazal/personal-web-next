@@ -17,7 +17,7 @@ import {
 
 // Static at build time, regenerated in the background at most once a minute (ISR).
 // New case studies published in Contentful are rendered on first visit.
-export const revalidate = 60
+export const revalidate = 3600
 
 type Params = Promise<{ lang: string; slug: string }>
 

@@ -1,4 +1,14 @@
-# Carlos Peraza
+import 'server-only'
+import { getPublishedPosts, type PostSummary } from '@/lib/data/blog'
+import { getProjects } from '@/lib/data/content'
+import { hasCaseStudy } from '@/lib/projects'
+import { absoluteUrl, type Lang } from '@/lib/i18n'
+
+/* llms.txt: a clean, citable summary for AI engines (https://llmstxt.org).
+ * The curated text lives here; projects and blog posts come from the database,
+ * so new content shows up automatically. */
+
+const INTRO = `# Carlos Peraza
 
 > Software Engineer and Tech Lead based in San José, Costa Rica, with 9+ years of experience building APIs, integrations, and web applications with .NET, React, Next.js, and Python. Currently leads the tech team at tucalzado.com and builds AI agents and Model Context Protocol (MCP) integrations for real business processes.
 
@@ -7,6 +17,7 @@ Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (In
 ## Profile
 
 - [Website](https://carlosperaza.dev): Portfolio with experience, projects, education, and contact form
+- [Blog](https://carlosperaza.dev/blog): Articles on .NET, AI agents, MCP and engineering leadership (Spanish: https://carlosperaza.dev/es/blog)
 - [LinkedIn](https://www.linkedin.com/in/cperazal): Professional profile
 - [GitHub](https://github.com/cperazal): Code and repositories
 - Contact: info@carlosperaza.dev
@@ -28,33 +39,51 @@ Carlos Peraza (username: cperazal) holds a degree in Informatics Engineering (In
 - Python Developer (part-time), Department of Government, Harvard University, remote (USA), January – July 2019: large-scale web scraping project that extracted about 300,000 records to support a PhD dissertation; received a letter of recommendation
 - PHP Developer, Hito Design, remote (Spain), July – December 2018: REST API with Laravel and MongoDB for an e-commerce platform
 - Python Developer, KOD LATAM Security, remote (Uruguay), June 2017 – July 2018: data collection tools for 3 web scraping projects for security analysis
-- PHP Developer & IT Support (part-time), Ailanthus Sistems C.A., Venezuela, February 2017 – February 2018: PHP system that digitized 80% of the company's manual processes
+- PHP Developer & IT Support (part-time), Ailanthus Sistems C.A., Venezuela, February 2017 – February 2018: PHP system that digitized 80% of the company's manual processes`
 
-## Selected projects
-
-- [BCR Tucán integration](https://carlosperaza.dev/projects/bcr-tucan-integration) (tucalzado.com, 2019): VB.NET / .NET Framework web service connecting the company to Banco de Costa Rica's collection service for bill payments and balance top-ups
-- [BN Servicios integration](https://carlosperaza.dev/projects/bn-servicios-integration) (tucalzado.com, 2019): SOAP web service integration with Banco Nacional de Costa Rica's collection service
-- DIMOI electronic invoicing (tucalzado.com): .NET Framework web service that transmits the company's invoices to DIMOI (Costa Rica) through a REST API
-- Comfiar integration: Windows service in VB.NET that sends electronic invoices in Colombia via SOAP
-- ASBANC integration: VB.NET web services connecting an ERP system with ASBANC (Peru)
-- [tucalzado.com](https://tucalzado.com): e-commerce web app with Next.js, React, .NET Framework, SQL Server, payment gateway, Vercel and Azure
-- [TCAprende](https://tcaprende.tucalzado.com/): e-learning web app with Next.js, React, C# REST APIs, SQL Server, Vercel and Azure
-- [tcmarcas.com](https://tcmarcas.com): e-commerce site with Next.js, React and a VB.NET / SQL Server backend
-- [Workout INC](https://www.workout.com.pa/workout/): e-commerce web app with React, VB.NET and SQL Server (Panama)
-- [Harvard University web scraping](https://carlosperaza.dev/projects/harvard-web-scraping) (2019): Python (Requests, Beautiful Soup, PostgreSQL) project that extracted about 300,000 records for a PhD dissertation
-- [Mercado Libre crawler](https://github.com/cperazal/mercadolibre-crawler): Scrapy project that extracts Mercado Libre search results
-- [Simple WA](https://simplewa.carlosperaza.dev): Next.js PWA to send WhatsApp messages without adding contacts
-
-## Skills
+const SKILLS = `## Skills
 
 - Languages: C#, VB.NET, JavaScript, Python, T-SQL
 - Frameworks: .NET Core, .NET Framework, React, Next.js
 - Databases: SQL Server, MySQL, MongoDB
 - DevOps and tools: Git, GitHub, CI/CD, Azure, Vercel, Heroku, Linux
 - AI for development: Claude Code, GitHub Copilot, MCP application development, skill authoring, agentic coding, AI cost control
-- Integrations: banking payment collection (BN, BCR, ASBANC Peru), electronic invoicing (DIMOI Costa Rica, Comfiar Colombia)
+- Integrations: banking payment collection (BN, BCR, ASBANC Peru), electronic invoicing (DIMOI Costa Rica, Comfiar Colombia)`
 
-## Optional
+const OPTIONAL = `## Optional
 
 - [Letter of recommendation, Harvard University](https://carlosperaza.dev/#rewards): Recommendation letter from the Department of Government for the web scraping project
-- [Spanish version / Versión en español](https://carlosperaza.dev/es): Same profile in Spanish
+- [Spanish version / Versión en español](https://carlosperaza.dev/es): Same profile in Spanish`
+
+const postLine = (p: PostSummary, lang: Lang) =>
+  `- [${p.title}](${absoluteUrl(lang, `/blog/${p.slug}`)}) (${p.publishedAt.slice(0, 10)}, ${lang === 'es' ? 'Spanish' : 'English'}): ${p.excerpt}`
+
+export async function buildLlmsTxt(): Promise<string> {
+  const [projects, postsEn, postsEs] = await Promise.all([
+    getProjects('en-US'),
+    getPublishedPosts('en'),
+    getPublishedPosts('es'),
+  ])
+
+  // Case studies first (they have their own page), then the rest
+  const ordered = [...projects.filter(hasCaseStudy), ...projects.filter((p) => !hasCaseStudy(p))]
+  const projectLines = ordered.map((p) => {
+    const link = hasCaseStudy(p) ? absoluteUrl('en', `/projects/${p.slug}`) : p.url
+    const name = link ? `[${p.titulo}](${link})` : p.titulo
+    const meta = [p.empresa, p.fecha?.slice(0, 4)].filter(Boolean).join(', ')
+    const tech = p.tecnologias?.length ? ` Technologies: ${p.tecnologias.join(', ')}.` : ''
+    return `- ${name}${meta ? ` (${meta})` : ''}: ${p.descripcion}${tech}`
+  })
+
+  const blog = [...postsEn.map((p) => postLine(p, 'en')), ...postsEs.map((p) => postLine(p, 'es'))]
+
+  return (
+    [
+      INTRO,
+      `## Selected projects\n\n${projectLines.join('\n')}`,
+      SKILLS,
+      ...(blog.length ? [`## Blog articles\n\n${blog.join('\n')}`] : []),
+      OPTIONAL,
+    ].join('\n\n') + '\n'
+  )
+}

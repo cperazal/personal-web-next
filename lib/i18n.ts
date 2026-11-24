@@ -88,3 +88,6 @@ export const SEO: Record<
     homeLabel: 'Inicio',
   },
 }
+
+/** RSS feed per language: /feed.xml and /es/feed.xml */
+export const feedUrl = (lang: Lang) => `${SITE_URL}${lang === 'es' ? '/es' : ''}/feed.xml`

@@ -1,4 +1,6 @@
 import { CONTENTFUL_LOCALE, isLang } from '@/lib/i18n'
+import { getPublishedPosts } from '@/lib/data/blog'
+import LatestPosts from '@/components/sections/LatestPosts'
 import {
   getPersonalInfo,
   getSkills,
@@ -16,16 +18,18 @@ import Education from '@/components/sections/Education'
 import Rewards from '@/components/sections/Rewards'
 import Contact from '@/components/sections/Contact'
 
-// Static at build time, regenerated in the background at most once a minute (ISR)
-export const revalidate = 60
+// Static at build time. The admin revalidates instantly on every save; the hourly
+// revalidation is only a safety net (fewer database wake-ups on Neon).
+export const revalidate = 3600
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   // The language comes from the URL: "/" = English, "/es" = Spanish
   const { lang } = await params
-  const locale = CONTENTFUL_LOCALE[isLang(lang) ? lang : 'en']
+  const urlLang = isLang(lang) ? lang : 'en'
+  const locale = CONTENTFUL_LOCALE[urlLang]
 
   // Fetch all data in parallel
-  const [personalInfo, skills, experience, education, projects, certificates] =
+  const [personalInfo, skills, experience, education, projects, certificates, posts] =
     await Promise.all([
       getPersonalInfo(locale),
       getSkills(),
@@ -33,6 +37,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       getEducation(locale),
       getProjects(locale),
       getCertificates(locale),
+      getPublishedPosts(urlLang),
     ])
 
   return (
@@ -44,6 +49,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <Projects initialData={projects} />
       <Education initialData={education} />
       <Rewards initialData={certificates} />
+      <LatestPosts posts={posts} lang={urlLang} />
       <Contact initialData={personalInfo} />
 
       {/* Footer */}

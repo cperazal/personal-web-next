@@ -188,3 +188,28 @@ export async function getLastContentUpdate(): Promise<Date | null> {
 }
 
 export { hasCaseStudy }
+
+/* ─── Author (blog author box, OG images, JSON-LD) ─────────────────────────── */
+export interface Author {
+  name: string
+  headline: string
+  bio: string
+  photoUrl: string | null
+  linkedin: string | null
+  github: string | null
+  twitter: string | null
+}
+
+export const getAuthor = cached(async (locale: Locale = 'en-US'): Promise<Author | null> => {
+  const [p] = await getDb().select().from(s.profile).limit(1)
+  if (!p) return null
+  return {
+    name: p.name,
+    headline: pick(locale, p.headlineEn, p.headlineEs),
+    bio: pick(locale, p.bioEn, p.bioEs),
+    photoUrl: p.photoUrl,
+    linkedin: p.linkedin,
+    github: p.github,
+    twitter: p.twitter,
+  }
+}, 'author')
