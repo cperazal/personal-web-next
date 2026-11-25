@@ -1,10 +1,9 @@
 'use server'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { count, desc, eq } from 'drizzle-orm'
 import { getDb, schema as s } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth/require-admin'
-import { POSTS_TAG } from '@/lib/data/blog'
+import { revalidateSite } from '@/lib/revalidate'
 
 export type CommentStatus = 'pending' | 'approved' | 'rejected' | 'spam'
 const STATUSES: CommentStatus[] = ['pending', 'approved', 'rejected', 'spam']
@@ -42,8 +41,7 @@ export async function listComments(status: CommentStatus) {
 
 function refresh() {
   // Approved comments are part of the article HTML and its JSON-LD
-  revalidateTag(POSTS_TAG)
-  revalidatePath('/', 'layout')
+  revalidateSite()
 }
 
 export async function setCommentStatus(id: string, status: CommentStatus) {
