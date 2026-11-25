@@ -1,11 +1,10 @@
 'use server'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { and, desc, eq, inArray } from 'drizzle-orm'
 import { del } from '@vercel/blob'
 import { getDb, schema as s } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth/require-admin'
-import { POSTS_TAG } from '@/lib/data/blog'
+import { revalidateSite } from '@/lib/revalidate'
 import { renderMarkdown, readingTime } from '@/lib/markdown'
 import { slugify } from './entities'
 
@@ -31,8 +30,7 @@ export type PostResult = { ok: true; id: string; status: 'draft' | 'published' }
 const BLOB_HOST = '.public.blob.vercel-storage.com'
 
 function refreshBlog() {
-  revalidateTag(POSTS_TAG)
-  revalidatePath('/', 'layout') // home "latest posts", sitemap, feeds, llms.txt
+  revalidateSite() // posts, home "latest posts", sitemap, feeds, llms.txt
 }
 
 const clean = (v: unknown, max = 100_000) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
