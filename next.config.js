@@ -4,10 +4,9 @@ const nextConfig = {
 
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'images.ctfassets.net' },
-      { protocol: 'https', hostname: 'downloads.ctfassets.net' },
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
-      { protocol: 'https', hostname: '**.ctfassets.net' },
+      // Vercel Blob (images uploaded from /admin)
+      { protocol: 'https', hostname: '**.public.blob.vercel-storage.com' },
     ],
     unoptimized: false,
   },

@@ -1,5 +1,5 @@
 // ─── Shared primitive ────────────────────────────────────────────────────────
-export interface ContentfulImage {
+export interface ImageAsset {
   url: string
   title: string
   width?: number
@@ -19,8 +19,8 @@ export interface PersonalInfo {
   telefono?: string | null
   correo: string
   web?: string | null
-  foto?: ContentfulImage | null
-  /** Downloadable CV per language (the CV asset's file is localized in Contentful) */
+  foto?: ImageAsset | null
+  /** Downloadable CV per language (one PDF per language) */
   cv?: { en: string | null; es: string | null } | null
 }
 
@@ -41,7 +41,7 @@ export interface ExperienceItem {
   fechaInicio: string
   fechaCulminacion?: string | null
   descripcion: string
-  imagen?: ContentfulImage | null
+  imagen?: ImageAsset | null
   tecnologias: string[]
 }
 
@@ -53,7 +53,7 @@ export interface EducationItem {
   pais: string
   fechaDeInicio: string
   fechaDeCulminacion?: string | null
-  imagen?: ContentfulImage | null
+  imagen?: ImageAsset | null
 }
 
 export interface ProjectItem {
@@ -62,9 +62,9 @@ export interface ProjectItem {
   empresa?: string | null
   url?: string | null
   descripcion: string
-  imagen?: ContentfulImage | null
+  imagen?: ImageAsset | null
   tecnologias?: string[]
-  /* Case study fields (optional in Contentful). A project gets its own page at
+  /* Case study fields (optional). A project gets its own page at
      /projects/[slug] only when it has a slug and a solution. */
   slug?: string | null
   rol?: string | null
@@ -80,9 +80,9 @@ export interface CertificadoItem {
   titulo: string
   institucion: string
   url?: string | null
-  imagen?: ContentfulImage | null
+  imagen?: ImageAsset | null
   archivo?: { url: string; title: string } | null
-  thumbnails?: ContentfulImage | null
+  thumbnails?: ImageAsset | null
 }
 
 // ─── Locale ───────────────────────────────────────────────────────────────────
