@@ -40,9 +40,8 @@ ${posts[0] ? `    <lastBuildDate>${new Date(posts[0].updatedAt).toUTCString()}</
 </rss>
 `
   return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-    },
+    // No custom Cache-Control: Next.js caches this route at the CDN (revalidate = 3600)
+    // and the admin's revalidateSite() refreshes it on every save.
+    headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
   })
 }

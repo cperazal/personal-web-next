@@ -1,11 +1,10 @@
 'use server'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { asc, eq, getTableColumns, inArray, sql } from 'drizzle-orm'
 import { del } from '@vercel/blob'
 import { getDb, schema as s } from '@/lib/db'
 import { requireAdmin } from '@/lib/auth/require-admin'
-import { CONTENT_TAG } from '@/lib/data/content'
+import { revalidateSite } from '@/lib/revalidate'
 import { ENTITIES, type EntityDef, slugify } from './entities'
 
 /* ─── Entity → table ────────────────────────────────────────────────────────── */
@@ -31,8 +30,7 @@ function resolve(entity: string) {
 
 /** Refresh every public page that shows content */
 function refreshSite() {
-  revalidateTag(CONTENT_TAG)
-  revalidatePath('/', 'layout')
+  revalidateSite()
 }
 
 const BLOB_HOST = '.public.blob.vercel-storage.com'

@@ -6,14 +6,22 @@ import { LOCALE_BY_LANG, isLang, type Lang } from '@/lib/i18n'
 
 // Share card for LinkedIn, X, Facebook, WhatsApp… generated from the post itself,
 // so every article gets a clear preview without designing images by hand.
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
-export const alt = 'Carlos Peraza — Blog'
+//
+// Served from a plain route (not the opengraph-image file convention) so the
+// page can link it as /og?v=<last edit>: the URL changes whenever the post is
+// edited, which forces LinkedIn & co. to fetch the new image instead of reusing
+// a cached one.
+const size = { width: 1200, height: 630 }
 
 const clamp = (text: string, max: number) => (text.length > max ? `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…` : text)
 
-export default async function OgImage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ lang: string; slug: string }> }) {
   const { lang: raw, slug } = await params
+  // Versioned URLs (?v=…) never change content → cache for a year; unversioned ones briefly
+  const versioned = new URL(req.url).searchParams.has('v')
+  const cacheControl = versioned
+    ? 'public, max-age=31536000, immutable'
+    : 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400'
   const lang: Lang = isLang(raw) ? raw : 'en'
   const [post, author] = await Promise.all([getPostBySlug(lang, slug), getAuthor(LOCALE_BY_LANG[lang])])
   const t = BLOG_COPY[lang]
@@ -74,6 +82,6 @@ export default async function OgImage({ params }: { params: Promise<{ lang: stri
         </div>
       </div>
     ),
-    size
+    { ...size, headers: { 'Cache-Control': cacheControl } }
   )
 }

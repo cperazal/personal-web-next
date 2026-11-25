@@ -45,12 +45,16 @@ async function load(params: Params) {
 
 const postPath = (slug: string) => `/blog/${slug}`
 
+/** Share image URL, versioned by the last edit so social networks never reuse a stale image */
+const ogImageUrl = (postUrl: string, updatedAt: string) => `${postUrl}/og?v=${new Date(updatedAt).getTime()}`
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { lang, post } = await load(params)
   const url = absoluteUrl(lang, postPath(post.slug))
   const languages: Record<string, string> = { [lang]: url }
   if (post.alternate) languages[post.alternate.lang] = absoluteUrl(post.alternate.lang, postPath(post.alternate.slug))
   languages['x-default'] = languages.en ?? url
+  const image = { url: ogImageUrl(url, post.updatedAt), width: 1200, height: 630, alt: post.title }
 
   return {
     title: post.title,
@@ -68,12 +72,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       modifiedTime: post.updatedAt,
       authors: [SITE_URL],
       tags: post.tags,
+      images: [image],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
       creator: '@cperazal',
+      images: [image.url],
     },
   }
 }
@@ -89,7 +95,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   ])
   const url = absoluteUrl(lang, postPath(post.slug))
   const blogUrl = absoluteUrl(lang, '/blog')
-  const ogImage = `${url}/opengraph-image`
+  const ogImage = ogImageUrl(url, post.updatedAt)
   const wasUpdated = post.updatedAt.slice(0, 10) > post.publishedAt.slice(0, 10)
 
   const structuredData = {
