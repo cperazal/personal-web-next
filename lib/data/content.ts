@@ -24,7 +24,7 @@ const cached = <A extends unknown[], R>(fn: (...args: A) => Promise<R>, key: str
   unstable_cache(fn, [key], { tags: [CONTENT_TAG], revalidate: 3600 })
 
 const isEs = (locale: Locale) => locale === 'es-419'
-/** Spanish text with English fallback (same behavior Contentful had) */
+/** Spanish text with English fallback */
 const pick = (locale: Locale, en: string | null, es: string | null) =>
   (isEs(locale) ? es || en : en || es) ?? ''
 

@@ -20,7 +20,7 @@ export interface PersonalInfo {
   correo: string
   web?: string | null
   foto?: ImageAsset | null
-  /** Downloadable CV per language (the CV asset's file is localized in Contentful) */
+  /** Downloadable CV per language (one PDF per language) */
   cv?: { en: string | null; es: string | null } | null
 }
 
@@ -64,7 +64,7 @@ export interface ProjectItem {
   descripcion: string
   imagen?: ImageAsset | null
   tecnologias?: string[]
-  /* Case study fields (optional in Contentful). A project gets its own page at
+  /* Case study fields (optional). A project gets its own page at
      /projects/[slug] only when it has a slug and a solution. */
   slug?: string | null
   rol?: string | null

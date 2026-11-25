@@ -13,13 +13,13 @@ export function isLang(value: string): value is Lang {
   return (LANGS as readonly string[]).includes(value)
 }
 
-/** Contentful locale for each URL language */
-export const CONTENTFUL_LOCALE: Record<Lang, Locale> = {
+/** Content locale for each URL language */
+export const LOCALE_BY_LANG: Record<Lang, Locale> = {
   en: 'en-US',
   es: 'es-419',
 }
 
-/** URL language for each Contentful locale */
+/** URL language for each content locale */
 export function langFromLocale(locale: Locale): Lang {
   return locale === 'es-419' ? 'es' : 'en'
 }

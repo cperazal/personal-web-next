@@ -1,16 +1,19 @@
+import { jsonLd } from '@/lib/jsonld'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { findSlugRedirect, getPostBySlug, getPublishedPosts, getRelatedPosts } from '@/lib/data/blog'
+import { findSlugRedirect, getApprovedComments, getPostBySlug, getPublishedPosts, getRelatedPosts } from '@/lib/data/blog'
 import { getAuthor } from '@/lib/data/content'
 import { renderMarkdown } from '@/lib/markdown'
 import { BLOG_COPY, formatDate } from '@/lib/blog-copy'
-import { CONTENTFUL_LOCALE, SEO, SITE_URL, absoluteUrl, isLang, localePath, type Lang } from '@/lib/i18n'
+import { LOCALE_BY_LANG, SEO, SITE_URL, absoluteUrl, isLang, localePath, type Lang } from '@/lib/i18n'
 import PostCard from '@/components/blog/PostCard'
 import ShareButtons from '@/components/blog/ShareButtons'
 import AuthorBox from '@/components/blog/AuthorBox'
+import ViewCounter from '@/components/blog/ViewCounter'
+import CommentForm from '@/components/blog/CommentForm'
 
 // Static at build time; the admin revalidates on publish, hourly as a safety net.
 // New posts published later are rendered on first visit.
@@ -78,17 +81,18 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function BlogPostPage({ params }: { params: Params }) {
   const { lang, post } = await load(params)
   const t = BLOG_COPY[lang]
-  const [rendered, author, related] = await Promise.all([
+  const [rendered, author, related, comments] = await Promise.all([
     renderMarkdown(post.content),
-    getAuthor(CONTENTFUL_LOCALE[lang]),
+    getAuthor(LOCALE_BY_LANG[lang]),
     getRelatedPosts(post),
+    getApprovedComments(post.id),
   ])
   const url = absoluteUrl(lang, postPath(post.slug))
   const blogUrl = absoluteUrl(lang, '/blog')
   const ogImage = `${url}/opengraph-image`
   const wasUpdated = post.updatedAt.slice(0, 10) > post.publishedAt.slice(0, 10)
 
-  const jsonLd = {
+  const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -108,6 +112,18 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         keywords: post.tags.join(', '),
         wordCount: rendered.wordCount,
         timeRequired: `PT${post.readingTime}M`,
+        commentCount: comments.length,
+        ...(comments.length
+          ? {
+              comment: comments.map((c) => ({
+                '@type': 'Comment',
+                author: { '@type': 'Person', name: c.name },
+                dateCreated: c.createdAt,
+                text: c.body,
+                inLanguage: c.lang,
+              })),
+            }
+          : {}),
         ...(post.alternate
           ? { workTranslation: { '@id': `${absoluteUrl(post.alternate.lang, postPath(post.alternate.slug))}#article` } }
           : {}),
@@ -125,7 +141,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
   return (
     <article className="container-section" style={{ maxWidth: '46rem', paddingTop: '8rem' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
 
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="font-mono text-xs" style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
@@ -152,6 +168,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             </span>
           )}
           <span>{t.minRead(post.readingTime)}</span>
+          <ViewCounter postId={post.id} locale={LOCALE_BY_LANG[lang]} />
         </p>
       </header>
 
@@ -194,6 +211,49 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <AuthorBox author={author} lang={lang} title={t.about} />
         </div>
       )}
+
+
+      {/* Comments: approved ones are part of the server HTML (indexable) */}
+      <section id="comments" style={{ marginTop: '4rem' }} aria-labelledby="comments-heading">
+        <h2 id="comments-heading" className="text-xl font-semibold" style={{ marginBottom: '1.25rem' }}>
+          {t.comments} {comments.length > 0 && <span style={{ color: 'var(--text-secondary)' }}>({comments.length})</span>}
+        </h2>
+        {comments.length === 0 ? (
+          <p className="text-sm" style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>{t.noComments}</p>
+        ) : (
+          <ol className="flex flex-col" style={{ gap: '1rem', marginBottom: '2rem' }}>
+            {comments.map((c) => (
+              <li key={c.id} className="glass-card" style={{ padding: '1.1rem 1.25rem' }}>
+                <p className="text-sm flex flex-wrap items-baseline" style={{ gap: '0.5rem', marginBottom: '0.4rem' }}>
+                  <strong>{c.name}</strong>
+                  <time dateTime={c.createdAt} className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>
+                    {formatDate(c.createdAt, lang)}
+                  </time>
+                  {c.lang !== lang && <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>· {t.otherLang}</span>}
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: '#d6d6de', whiteSpace: 'pre-line' }}>{c.body}</p>
+              </li>
+            ))}
+          </ol>
+        )}
+        <CommentForm
+          postId={post.id}
+          lang={lang}
+          labels={{
+            leaveComment: t.leaveComment,
+            yourName: t.yourName,
+            yourComment: t.yourComment,
+            send: t.send,
+            sending: t.sending,
+            moderationNote: t.moderationNote,
+            thanks: t.thanks,
+            errCaptcha: t.errCaptcha,
+            errRate: t.errRate,
+            errGeneric: t.errGeneric,
+            errFields: t.errFields,
+          }}
+        />
+      </section>
 
       {related.length > 0 && (
         <section style={{ marginTop: '4rem' }} aria-labelledby="related-heading">

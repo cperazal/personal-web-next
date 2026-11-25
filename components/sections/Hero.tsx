@@ -41,7 +41,7 @@ const TYPEWRITER_SEQUENCE = [
 const SHOW_FLOATING_ICONS = true
 
 /**
- * Names of skills to show as floating icons (must match `nombre` in Contentful,
+ * Names of skills to show as floating icons (must match the skill name in the admin,
  * case-insensitive). Remove or add names freely.
  * Set to [] to automatically use the top 12 skills sorted by level.
  */

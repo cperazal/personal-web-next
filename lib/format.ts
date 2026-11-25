@@ -4,7 +4,7 @@ const MONTHS: Record<string, string[]> = {
 }
 
 /**
- * Formats a Contentful date ("YYYY-MM-DD" or ISO string) as "Mar 2021" (en-US) or "Abr 2021" (es-419).
+ * Formats a date ("YYYY-MM-DD" or ISO string) as "Mar 2021" (en-US) or "Abr 2021" (es-419).
  * Parses the string directly to avoid timezone shifts.
  */
 export function formatMonthYear(value: string | null | undefined, locale: string = 'en-US'): string {

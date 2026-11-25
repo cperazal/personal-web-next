@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 import { getPostBySlug } from '@/lib/data/blog'
 import { getAuthor } from '@/lib/data/content'
 import { BLOG_COPY } from '@/lib/blog-copy'
-import { CONTENTFUL_LOCALE, isLang, type Lang } from '@/lib/i18n'
+import { LOCALE_BY_LANG, isLang, type Lang } from '@/lib/i18n'
 
 // Share card for LinkedIn, X, Facebook, WhatsApp… generated from the post itself,
 // so every article gets a clear preview without designing images by hand.
@@ -15,7 +15,7 @@ const clamp = (text: string, max: number) => (text.length > max ? `${text.slice(
 export default async function OgImage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
   const { lang: raw, slug } = await params
   const lang: Lang = isLang(raw) ? raw : 'en'
-  const [post, author] = await Promise.all([getPostBySlug(lang, slug), getAuthor(CONTENTFUL_LOCALE[lang])])
+  const [post, author] = await Promise.all([getPostBySlug(lang, slug), getAuthor(LOCALE_BY_LANG[lang])])
   const t = BLOG_COPY[lang]
 
   const title = post?.title ?? 'carlosperaza.dev'

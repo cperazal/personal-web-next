@@ -1,4 +1,4 @@
-import { CONTENTFUL_LOCALE, isLang } from '@/lib/i18n'
+import { LOCALE_BY_LANG, isLang } from '@/lib/i18n'
 import { getPublishedPosts } from '@/lib/data/blog'
 import LatestPosts from '@/components/sections/LatestPosts'
 import {
@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   // The language comes from the URL: "/" = English, "/es" = Spanish
   const { lang } = await params
   const urlLang = isLang(lang) ? lang : 'en'
-  const locale = CONTENTFUL_LOCALE[urlLang]
+  const locale = LOCALE_BY_LANG[urlLang]
 
   // Fetch all data in parallel
   const [personalInfo, skills, experience, education, projects, certificates, posts] =
@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           {lang === 'es' ? 'Hecho con' : 'Built with'}{' '}
           <span style={{ color: 'var(--accent)' }}>Next.js 15 + Tailwind v4 + Framer Motion</span>
           {' '}— {lang === 'es' ? 'Contenido gestionado con' : 'Content powered by'}{' '}
-          <span style={{ color: 'var(--accent)' }}>Contentful CMS</span>
+          <span style={{ color: 'var(--accent)' }}>Neon + Vercel</span>
         </div>
       </footer>
     </>

@@ -116,3 +116,25 @@ export async function getRelatedPosts(post: PostSummary, limit = 3): Promise<Pos
   const score = (p: PostSummary) => p.tags.filter((t) => post.tags.includes(t)).length
   return [...others].sort((a, b) => score(b) - score(a)).slice(0, limit)
 }
+
+/* ─── Comments (approved only, shown on the article) ───────────────────────── */
+export interface PublicComment {
+  id: string
+  name: string
+  body: string
+  lang: string
+  createdAt: string // ISO
+}
+
+export const getApprovedComments = unstable_cache(
+  async (postId: string): Promise<PublicComment[]> => {
+    const rows = await getDb()
+      .select()
+      .from(s.comments)
+      .where(and(eq(s.comments.postId, postId), eq(s.comments.status, 'approved')))
+      .orderBy(s.comments.createdAt)
+    return rows.map((c) => ({ id: c.id, name: c.name, body: c.body, lang: c.lang, createdAt: c.createdAt.toISOString() }))
+  },
+  ['blog-comments'],
+  { tags: [POSTS_TAG], revalidate: 3600 }
+)

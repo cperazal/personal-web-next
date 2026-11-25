@@ -1,3 +1,4 @@
+import { jsonLd } from '@/lib/jsonld'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getPublishedPosts } from '@/lib/data/blog'
@@ -44,7 +45,7 @@ export default async function BlogIndexPage({ params }: { params: Params }) {
   const posts = await getPublishedPosts(lang)
   const url = absoluteUrl(lang, '/blog')
 
-  const jsonLd = {
+  const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -76,7 +77,7 @@ export default async function BlogIndexPage({ params }: { params: Params }) {
 
   return (
     <div className="container-section" style={{ paddingTop: '8rem' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <nav aria-label="Breadcrumb" className="font-mono text-xs" style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
         <Link href={localePath(lang, '/')} style={{ color: 'inherit' }}>{t.home}</Link> / {t.blog}
       </nav>
