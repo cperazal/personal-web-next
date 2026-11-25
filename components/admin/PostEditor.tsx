@@ -96,7 +96,7 @@ export default function PostEditor({ initial }: { initial: PostEditorInitial }) 
     })
 
   const excerptLen = excerpt.length
-  const excerptColor = excerptLen === 0 ? 'var(--text-secondary)' : excerptLen < 70 || excerptLen > 155 ? '#fbbf24' : '#86efac'
+  const excerptColor = excerptLen === 0 ? 'var(--text-secondary)' : excerptLen < 70 || excerptLen > 155 ? 'var(--warning)' : 'var(--success)'
 
   return (
     <div className="flex flex-col gap-6 max-w-[1400px]">
@@ -122,7 +122,7 @@ export default function PostEditor({ initial }: { initial: PostEditorInitial }) 
         </div>
         <span
           className="text-xs font-mono px-2 py-1 rounded"
-          style={{ background: status === 'published' ? 'rgba(34,197,94,0.15)' : 'rgba(251,191,36,0.15)', color: status === 'published' ? '#86efac' : '#fbbf24' }}
+          style={{ background: status === 'published' ? 'var(--success-bg)' : 'rgba(251,191,36,0.15)', color: status === 'published' ? 'var(--success)' : 'var(--warning)' }}
         >
           {status === 'published' ? 'Publicado' : 'Borrador'}
         </span>
@@ -161,8 +161,8 @@ export default function PostEditor({ initial }: { initial: PostEditorInitial }) 
           role={message.type === 'error' ? 'alert' : 'status'}
           className="text-sm rounded-lg px-3 py-2"
           style={{
-            background: message.type === 'ok' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
-            color: message.type === 'ok' ? '#86efac' : '#fca5a5',
+            background: message.type === 'ok' ? 'var(--success-bg)' : 'var(--danger-bg)',
+            color: message.type === 'ok' ? 'var(--success)' : 'var(--danger)',
           }}
         >
           {message.text}
@@ -205,7 +205,7 @@ export default function PostEditor({ initial }: { initial: PostEditorInitial }) 
               </button>
             </div>
             {status === 'published' && slug !== (lang === 'en' ? initial.slugEn : initial.slugEs) && (lang === 'en' ? initial.slugEn : initial.slugEs) && (
-              <p className="admin-help" style={{ color: '#fbbf24' }}>
+              <p className="admin-help" style={{ color: 'var(--warning)' }}>
                 Cambiaste el slug de un post publicado: la URL anterior redirigirá automáticamente a la nueva.
               </p>
             )}

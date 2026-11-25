@@ -59,6 +59,21 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // While the mobile menu is open: lock page scroll and close with Escape
+  useEffect(() => {
+    if (!mobileOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [mobileOpen])
+
   const scrollTo = useCallback((href: string) => {
     const id = href.replace('#', '')
     const el = document.getElementById(id)
@@ -95,8 +110,8 @@ export default function Navbar() {
           >
             <Github
               size={18}
-              style={{ color: 'rgba(255,255,255,0.55)', transition: 'color 0.2s' }}
-              className="group-hover:text-white!"
+              style={{ color: 'var(--icon-muted)', transition: 'color 0.2s' }}
+              className="group-hover:text-[color:var(--text-primary)]!"
             />
             <span>
               @cperazal
@@ -181,8 +196,8 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* ThemeToggle hidden — re-enable by removing the hidden class */}
-            <div className="hidden" aria-hidden="true"><ThemeToggle /></div>
+            {/* Light / dark switch (dark is the default) */}
+            <ThemeToggle />
 
             {/* Hamburger */}
             <button
@@ -196,6 +211,7 @@ export default function Navbar() {
               }}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -217,92 +233,111 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
             />
-            {/* Drawer */}
+            {/* Drawer (inline styles: the public site's CSS reset ignores Tailwind spacing) */}
             <motion.div
               key="drawer"
-              className="fixed top-[70px] right-0 bottom-0 w-72 z-50 md:hidden flex flex-col py-8 px-5"
-              style={{ background: 'var(--surface)', borderLeft: '1px solid var(--border)' }}
+              id="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label={locale === 'es-419' ? 'Menú' : 'Menu'}
+              className="md:hidden"
+              style={{
+                position: 'fixed',
+                top: 70,
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                maxWidth: '26rem',
+                zIndex: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'var(--surface)',
+                borderLeft: '1px solid var(--border)',
+                borderTop: '1px solid var(--border)',
+                padding: '1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))',
+                overflowY: 'auto',
+              }}
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 350, damping: 32 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 34 }}
             >
               {/* Nav links */}
-              <nav className="flex flex-col gap-1 flex-1">
-                {NAV_LINKS.map(({ href, label }) => {
-                  const id = href.replace('#', '')
-                  const isActive = activeSection === id
-                  return (
-                    <button
-                      key={href}
-                      onClick={() => scrollTo(href)}
-                      className="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium text-left transition-colors duration-200"
-                      style={{
-                        background: isActive ? 'var(--bg-card)' : 'transparent',
-                        color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
-                        border: 'none',
-                        cursor: 'pointer',
-                        width: '100%',
-                      }}
-                    >
-                      {label[locale]}
-                      {isActive && (
-                        <motion.span
-                          layoutId="mobile-nav-dot"
-                          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                          style={{ background: 'var(--accent)' }}
-                          transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                        />
-                      )}
-                    </button>
-                  )
-                })}
-                <Link
-                  href={blogHref}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200"
-                  style={{ background: onBlog ? 'var(--bg-card)' : 'transparent', color: onBlog ? 'var(--accent)' : 'var(--text-secondary)', textDecoration: 'none' }}
-                >
-                  Blog
-                </Link>
+              <nav aria-label={locale === 'es-419' ? 'Navegación' : 'Navigation'} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                {[...NAV_LINKS.map((l) => ({ ...l, isPage: false })), { href: blogHref, label: { 'en-US': 'Blog', 'es-419': 'Blog' }, isPage: true }].map(
+                  ({ href, label, isPage }, i) => {
+                    const isActive = isPage ? onBlog : !onBlog && activeSection === href.replace('#', '')
+                    const itemStyle = {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.9rem',
+                      width: '100%',
+                      padding: '0.95rem 1rem',
+                      borderRadius: '12px',
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      textAlign: 'left' as const,
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      border: '1px solid',
+                      borderColor: isActive ? 'var(--border-accent)' : 'transparent',
+                      background: isActive ? 'var(--bg-card)' : 'transparent',
+                      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                      transition: 'background 0.2s, color 0.2s',
+                    }
+                    const content = (
+                      <>
+                        <span className="font-mono" style={{ fontSize: '0.72rem', color: isActive ? 'var(--accent)' : 'var(--text-secondary)', minWidth: '1.5rem' }}>
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span style={{ flex: 1 }}>{label[locale]}</span>
+                        {isActive && <span aria-hidden style={{ width: 7, height: 7, borderRadius: 999, background: 'var(--accent)' }} />}
+                      </>
+                    )
+                    return isPage ? (
+                      <Link key={href} href={href} onClick={() => setMobileOpen(false)} style={itemStyle} aria-current={isActive ? 'page' : undefined}>
+                        {content}
+                      </Link>
+                    ) : (
+                      <button key={href} type="button" onClick={() => scrollTo(href)} style={itemStyle} aria-current={isActive ? 'true' : undefined}>
+                        {content}
+                      </button>
+                    )
+                  }
+                )}
               </nav>
 
-              {/* Divider */}
-              <div style={{ height: '1px', background: 'var(--border)', marginBlock: '1.5rem' }} />
-
-              {/* Language toggle — same pill style as desktop */}
-              <div className="flex items-center gap-1 px-1">
-                <span className="text-xs font-mono mr-3" style={{ color: 'var(--text-secondary)' }}>
-                  Lang
-                </span>
-                {(['en-US', 'es-419'] as const).map((lang) => {
-                  const isActive = locale === lang
-                  return (
-                    <button
-                      key={lang}
-                      onClick={() => setLocale(lang)}
-                      className="relative w-10 h-8 text-xs font-mono font-bold tracking-widest transition-colors duration-200"
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: isActive ? 'var(--bg)' : 'var(--text-secondary)',
-                        borderRadius: '6px',
-                      }}
-                      aria-pressed={isActive}
-                    >
-                      {isActive && (
-                        <motion.span
-                          layoutId="mobile-lang-pill"
-                          className="absolute inset-0 rounded-md -z-10"
-                          style={{ background: 'var(--accent)' }}
-                          transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                        />
-                      )}
-                      {lang === 'en-US' ? 'EN' : 'ES'}
-                    </button>
-                  )
-                })}
+              {/* Footer: language selector */}
+              <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+                <p className="font-mono" style={{ fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                  {locale === 'es-419' ? 'Idioma' : 'Language'}
+                </p>
+                <div role="group" aria-label="Language selector" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', padding: '0.3rem', borderRadius: '12px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                  {(['en-US', 'es-419'] as const).map((lang) => {
+                    const isActive = locale === lang
+                    return (
+                      <button
+                        key={lang}
+                        type="button"
+                        onClick={() => setLocale(lang)}
+                        aria-pressed={isActive}
+                        style={{
+                          padding: '0.65rem 0',
+                          borderRadius: '9px',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '0.95rem',
+                          fontWeight: 600,
+                          background: isActive ? 'var(--accent)' : 'transparent',
+                          color: isActive ? 'var(--on-accent)' : 'var(--text-secondary)',
+                          transition: 'background 0.2s, color 0.2s',
+                        }}
+                      >
+                        {lang === 'en-US' ? 'English' : 'Español'}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </motion.div>
           </>

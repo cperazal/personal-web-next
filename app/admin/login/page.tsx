@@ -26,7 +26,7 @@ export default async function LoginPage({
         </div>
 
         {message && (
-          <p role="alert" className="text-sm rounded-lg px-3 py-2" style={{ background: 'rgba(239,68,68,0.12)', color: '#fca5a5' }}>
+          <p role="alert" className="text-sm rounded-lg px-3 py-2" style={{ background: 'var(--danger-bg)', color: 'var(--danger)' }}>
             {message}
           </p>
         )}
