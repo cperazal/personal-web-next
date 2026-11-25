@@ -308,14 +308,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
         </noscript>
       </head>
       <body>
-        {/* Dark only: the theme toggle is hidden, so ignore any old "light" value
-            saved in localStorage. Remove forcedTheme if the toggle comes back. */}
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="dark"
-          forcedTheme="dark"
-          enableSystem={false}
-        >
+        {/* Dark by default for everyone (the OS preference is ignored on purpose);
+            visitors can switch to light and the choice is remembered. */}
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
           <LocaleProvider locale={LOCALE_BY_LANG[lang]}>
             <MotionProvider>
               <Navbar />

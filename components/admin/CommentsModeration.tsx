@@ -120,7 +120,7 @@ export default function CommentsModeration({
                     </a>
                   )}
                 </div>
-                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#d6d6de' }}>
+                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--text-body)' }}>
                   {c.body}
                 </p>
                 <div className="flex flex-wrap gap-2">

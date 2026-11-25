@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, JetBrains_Mono } from 'next/font/google'
+import { ThemeProvider } from 'next-themes'
 import '../globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'], display: 'swap' })
@@ -13,8 +14,13 @@ export const metadata: Metadata = {
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" data-theme="dark" className={`${geistSans.variable} ${jetbrainsMono.variable}`}>
-      <body className="admin-root">{children}</body>
+    <html lang="es" suppressHydrationWarning className={`${geistSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="admin-root">
+        {/* Same light/dark setting as the public site (shared preference, dark by default) */}
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

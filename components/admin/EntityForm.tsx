@@ -199,7 +199,7 @@ export default function EntityForm({
           </div>
         )}
         {hasBilingual && missingEs > 0 && (
-          <span className="text-xs" style={{ color: '#fbbf24' }}>
+          <span className="text-xs" style={{ color: 'var(--warning)' }}>
             {missingEs} campo(s) sin traducir al español
           </span>
         )}
@@ -213,8 +213,8 @@ export default function EntityForm({
           role={status.type === 'error' ? 'alert' : 'status'}
           className="text-sm rounded-lg px-3 py-2 flex items-center gap-2"
           style={{
-            background: status.type === 'ok' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
-            color: status.type === 'ok' ? '#86efac' : '#fca5a5',
+            background: status.type === 'ok' ? 'var(--success-bg)' : 'var(--danger-bg)',
+            color: status.type === 'ok' ? 'var(--success)' : 'var(--danger)',
           }}
         >
           {status.type === 'ok' && <Check size={15} />} {status.text}

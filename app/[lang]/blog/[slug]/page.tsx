@@ -231,7 +231,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                   </time>
                   {c.lang !== lang && <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>· {t.otherLang}</span>}
                 </p>
-                <p className="text-sm leading-relaxed" style={{ color: '#d6d6de', whiteSpace: 'pre-line' }}>{c.body}</p>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-body)', whiteSpace: 'pre-line' }}>{c.body}</p>
               </li>
             ))}
           </ol>
