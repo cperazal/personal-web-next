@@ -28,8 +28,23 @@
   --accent: #E3E3E3;
   --accent-dim: #c8c8c8;
   --glow: rgba(227, 227, 227, 0.10);
+
+  /* Semantic tokens (used instead of hardcoded colors so both themes work) */
+  --text-body: #d6d6de;        /* long-form text: articles, comments */
+  --on-accent: #0a0a0f;        /* text on accent-colored buttons */
+  --divider: rgba(255, 255, 255, 0.06);
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --icon-muted: rgba(255, 255, 255, 0.55);
+  --shadow: rgba(0, 0, 0, 0.35);
+  --success: #86efac;
+  --success-bg: rgba(34, 197, 94, 0.12);
+  --danger: #fca5a5;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --warning: #fbbf24;
+  --info: #93c5fd;
 }
 
+/* Light theme. Accent and text colors meet WCAG AA (≥ 4.5:1) on --bg. */
 [data-theme='light'] {
   --bg: #f8f8fc;
   --bg-card: rgba(0, 0, 0, 0.03);
@@ -38,10 +53,23 @@
   --text-primary: #0a0a0f;
   --text-secondary: #5a5a6a;
   --border: rgba(0, 0, 0, 0.08);
-  --border-accent: rgba(0, 170, 94, 0.25);
-  --accent: #00aa5e;
-  --accent-dim: #008f4f;
-  --glow: rgba(0, 170, 94, 0.12);
+  --border-accent: rgba(0, 128, 74, 0.28);
+  --accent: #00804a;           /* 4.74:1 (was #00aa5e, 2.87:1) */
+  --accent-dim: #006b3e;
+  --glow: rgba(0, 128, 74, 0.12);
+
+  --text-body: #2b2b38;        /* 13.2:1 */
+  --on-accent: #ffffff;        /* 5.0:1 on --accent */
+  --divider: rgba(0, 0, 0, 0.08);
+  --border-soft: rgba(0, 0, 0, 0.09);
+  --icon-muted: rgba(0, 0, 0, 0.5);
+  --shadow: rgba(15, 23, 42, 0.12);
+  --success: #15803d;
+  --success-bg: rgba(22, 163, 74, 0.10);
+  --danger: #b91c1c;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+  --warning: #b45309;
+  --info: #1d4ed8;
 }
 
 /* ─── Base reset ───────────────────────────────────────────────────────────── */
@@ -88,7 +116,7 @@ body {
 /* ─── Selection ────────────────────────────────────────────────────────────── */
 ::selection {
   background: var(--accent);
-  color: #0a0a0f;
+  color: var(--on-accent);
 }
 
 /* ─── Focus ring ────────────────────────────────────────────────────────────── */
@@ -186,7 +214,7 @@ body {
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
   background: var(--accent);
-  color: #0a0a0f;
+  color: var(--on-accent);
   font-weight: 600;
   font-size: 0.9rem;
   border-radius: 8px;
@@ -276,7 +304,7 @@ textarea.admin-input {
 }
 .admin-error {
   font-size: 0.8rem;
-  color: #fca5a5;
+  color: var(--danger);
 }
 .admin-lang-badge {
   font-family: var(--font-mono);
@@ -325,7 +353,7 @@ textarea.admin-input {
   scroll-margin-top: 90px;
 }
 .prose-blog h2 + *, .prose-blog h3 + * { margin-top: 0.75em; }
-.prose-blog p, .prose-blog li { color: #d6d6de; }
+.prose-blog p, .prose-blog li { color: var(--text-body); }
 .prose-blog a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose-blog strong { color: var(--text-primary); font-weight: 650; }
 .prose-blog ul, .prose-blog ol { padding-left: 1.4em; }

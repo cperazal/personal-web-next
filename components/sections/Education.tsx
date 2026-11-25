@@ -14,7 +14,7 @@ interface EducationProps {
 
 export default function Education({ initialData }: EducationProps) {
   const { locale } = useLocale()
-  const data = initialData
+  const data = initialData
   return (
     <SectionWrapper id="education">
       <div className="container-section">
@@ -43,7 +43,7 @@ export default function Education({ initialData }: EducationProps) {
             <motion.div
               key={edu.id}
               className="flex gap-6 py-6"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+              style={{ borderBottom: '1px solid var(--divider)' }}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -52,7 +52,7 @@ export default function Education({ initialData }: EducationProps) {
               {/* Institution logo */}
               <div
                 className="shrink-0 w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center"
-                style={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ background: 'var(--surface-2)', border: '1px solid var(--border-soft)' }}
               >
                 {edu.imagen ? (
                   <Image

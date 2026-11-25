@@ -66,7 +66,7 @@ export default function PostsList({ posts: initial }: { posts: PostListItem[] })
                 </Link>
                 <p className="text-xs flex flex-wrap gap-x-3 gap-y-1 mt-1" style={{ color: 'var(--text-secondary)' }}>
                   <span
-                    style={{ color: p.status === 'published' ? (p.scheduled ? '#93c5fd' : '#86efac') : '#fbbf24' }}
+                    style={{ color: p.status === 'published' ? (p.scheduled ? 'var(--info)' : 'var(--success)') : 'var(--warning)' }}
                   >
                     {p.status === 'published' ? (p.scheduled ? `Programado · ${fmt(p.publishedAt)}` : `Publicado · ${fmt(p.publishedAt)}`) : 'Borrador'}
                   </span>

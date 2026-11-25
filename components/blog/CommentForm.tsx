@@ -116,7 +116,7 @@ export default function CommentForm({ postId, lang, labels }: { postId: string; 
 
   if (state === 'done') {
     return (
-      <p role="status" className="glass-card text-sm" style={{ padding: '1.25rem', color: '#86efac' }}>
+      <p role="status" className="glass-card text-sm" style={{ padding: '1.25rem', color: 'var(--success)' }}>
         {labels.thanks}
       </p>
     )
@@ -151,7 +151,7 @@ export default function CommentForm({ postId, lang, labels }: { postId: string; 
         </label>
       </div>
       <div ref={widgetRef} style={{ minHeight: started.current ? 65 : 0 }} />
-      {error && <p role="alert" className="text-sm" style={{ color: '#fca5a5' }}>{error}</p>}
+      {error && <p role="alert" className="text-sm" style={{ color: 'var(--danger)' }}>{error}</p>}
       <div className="flex flex-wrap items-center justify-between" style={{ gap: '0.75rem' }}>
         <p className="text-xs" style={{ color: 'var(--text-secondary)', maxWidth: '28rem' }}>{labels.moderationNote}</p>
         <button type="submit" className="btn-accent" disabled={state === 'sending'}>

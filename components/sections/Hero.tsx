@@ -338,7 +338,7 @@ function CvDownload({ cv, locale }: { cv?: PersonalInfo['cv']; locale: string })
         <div
           role="menu"
           className="absolute left-1/2 z-20 mt-2 w-44 -translate-x-1/2 overflow-hidden rounded-lg"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 12px 32px rgba(0,0,0,0.35)' }}
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 12px 32px var(--shadow)' }}
         >
           {options.map((o) => (
             <a

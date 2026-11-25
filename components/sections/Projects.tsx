@@ -20,7 +20,7 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
   return (
     <motion.article
       className="flex gap-6"
-      style={{ paddingBlock: '2.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ paddingBlock: '2.5rem', borderBottom: '1px solid var(--divider)' }}
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -33,7 +33,7 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
           style={{
             width: '140px',
             height: '92px',
-            border: '1px solid rgba(255,255,255,0.07)',
+            border: '1px solid var(--border-soft)',
           }}
         >
           <Image
@@ -51,7 +51,7 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
             width: '140px',
             height: '92px',
             background: 'var(--surface-2)',
-            border: '1px solid rgba(255,255,255,0.07)',
+            border: '1px solid var(--border-soft)',
           }}
         >
           <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>

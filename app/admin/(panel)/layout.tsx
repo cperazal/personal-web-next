@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { signOut } from '@/auth'
 import { requireAdmin, UnauthorizedError } from '@/lib/auth/require-admin'
 import AdminNav from '@/components/admin/AdminNav'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 // Never prerender or cache admin pages
 export const dynamic = 'force-dynamic'
@@ -21,8 +22,11 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         className="md:w-60 md:min-h-screen flex md:flex-col gap-4 p-4 md:p-6 shrink-0"
         style={{ borderRight: '1px solid var(--border)', background: 'var(--surface-2)' }}
       >
-        <div className="font-mono font-bold" style={{ color: 'var(--accent)' }}>
-          @cperazal · admin
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono font-bold" style={{ color: 'var(--accent)' }}>
+            @cperazal · admin
+          </span>
+          <ThemeToggle lang="es" />
         </div>
         <AdminNav />
         <div className="hidden md:flex flex-col gap-2 mt-auto text-xs" style={{ color: 'var(--text-secondary)' }}>

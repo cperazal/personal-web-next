@@ -20,7 +20,7 @@ export default async function AdminHome() {
         <Link
           href="/admin/comments"
           className="glass-card p-5 flex flex-col gap-1"
-          style={{ textDecoration: 'none', color: 'var(--text-primary)', borderColor: stats.pendingComments ? '#fbbf24' : undefined }}
+          style={{ textDecoration: 'none', color: 'var(--text-primary)', borderColor: stats.pendingComments ? 'var(--warning)' : undefined }}
         >
           <span className="text-3xl font-bold">{stats.pendingComments}</span>
           <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Comentarios por moderar</span>
