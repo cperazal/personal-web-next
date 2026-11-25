@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Github } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import { useLocale } from '@/context/locale-context'
-import { HOME_PATH, langFromLocale } from '@/lib/i18n'
+import { HOME_PATH, langFromLocale, localePath } from '@/lib/i18n'
 
 const NAV_LINKS = [
   { href: '#about', label: { 'en-US': 'About', 'es-419': 'Sobre Mí' } },
@@ -22,6 +23,9 @@ const SECTION_IDS = ['hero', 'about', 'experience', 'skills', 'projects', 'educa
 export default function Navbar() {
   const { locale, setLocale } = useLocale()
   const router = useRouter()
+  const pathname = usePathname()
+  const blogHref = localePath(langFromLocale(locale), '/blog')
+  const onBlog = /\/blog(\/|$)/.test(pathname)
   const [activeSection, setActiveSection] = useState('hero')
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -129,6 +133,14 @@ export default function Navbar() {
                 </button>
               )
             })}
+            <Link
+              href={blogHref}
+              className="relative py-1 text-sm font-medium transition-colors duration-200"
+              style={{ color: onBlog ? 'var(--accent)' : 'var(--text-secondary)', textDecoration: 'none' }}
+              aria-current={onBlog ? 'page' : undefined}
+            >
+              Blog
+            </Link>
           </nav>
 
           {/* Right controls */}
@@ -245,6 +257,14 @@ export default function Navbar() {
                     </button>
                   )
                 })}
+                <Link
+                  href={blogHref}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200"
+                  style={{ background: onBlog ? 'var(--bg-card)' : 'transparent', color: onBlog ? 'var(--accent)' : 'var(--text-secondary)', textDecoration: 'none' }}
+                >
+                  Blog
+                </Link>
               </nav>
 
               {/* Divider */}

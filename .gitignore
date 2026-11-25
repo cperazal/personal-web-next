@@ -44,3 +44,6 @@ skills-lock.json
 
 # Claude output
 /Claude outputs
+.env*
+
+!.env.example

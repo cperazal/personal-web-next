@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
 import { buildContactHtml, buildContactText } from '@/lib/contact-email'
-
-// ─── SMTP transporter (module-level singleton) ────────────────────────────────
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT ?? 587),
-  secure: process.env.SMTP_SECURE === 'true', // true = 465/SSL, false = STARTTLS
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
+import { transporter } from '@/lib/mailer'
 
 // ─── In-memory rate limiter (5 req / IP / 60 min) ────────────────────────────
 const rateMap = new Map<string, { count: number; resetAt: number }>()

@@ -1,11 +1,12 @@
+import { jsonLd } from '@/lib/jsonld'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { getCaseStudies, getProjectBySlug } from '@/lib/contentful'
+import { getCaseStudies, getProjectBySlug } from '@/lib/data/content'
 import {
-  CONTENTFUL_LOCALE,
+  LOCALE_BY_LANG,
   SEO,
   SITE_URL,
   absoluteUrl,
@@ -16,8 +17,8 @@ import {
 } from '@/lib/i18n'
 
 // Static at build time, regenerated in the background at most once a minute (ISR).
-// New case studies published in Contentful are rendered on first visit.
-export const revalidate = 60
+// New case studies published from the admin are rendered on first visit.
+export const revalidate = 3600
 
 type Params = Promise<{ lang: string; slug: string }>
 
@@ -52,7 +53,7 @@ const COPY = {
 
 export async function generateStaticParams({ params }: { params: { lang: string } }) {
   const lang: Lang = isLang(params.lang) ? params.lang : 'en'
-  const projects = await getCaseStudies(CONTENTFUL_LOCALE[lang])
+  const projects = await getCaseStudies(LOCALE_BY_LANG[lang])
   return projects.map((p) => ({ slug: p.slug as string }))
 }
 
@@ -60,7 +61,7 @@ async function loadProject(params: Params) {
   const { lang: rawLang, slug } = await params
   if (!isLang(rawLang)) notFound()
   const lang: Lang = rawLang
-  const project = await getProjectBySlug(slug, CONTENTFUL_LOCALE[lang])
+  const project = await getProjectBySlug(slug, LOCALE_BY_LANG[lang])
   if (!project) notFound()
   return { lang, slug, project }
 }
@@ -72,7 +73,7 @@ function excerpt(text: string, max = 155): string {
   return `${clean.slice(0, max - 1).replace(/\s+\S*$/, '')}…`
 }
 
-/** Splits long text from Contentful into paragraphs */
+/** Splits long text into paragraphs (blank line = new paragraph) */
 function Paragraphs({ text }: { text: string }) {
   return (
     <>
@@ -129,7 +130,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const url = absoluteUrl(lang, path)
   const year = project.fecha ? project.fecha.slice(0, 4) : null
 
-  const jsonLd = {
+  const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
@@ -177,7 +178,7 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
   return (
     <article className="container-section" style={{ maxWidth: '48rem', paddingTop: '8rem' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
 
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="font-mono text-xs mb-8" style={{ color: 'var(--text-secondary)' }}>

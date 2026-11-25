@@ -1,3 +1,4 @@
+import { jsonLd } from '@/lib/jsonld'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Geist, JetBrains_Mono } from 'next/font/google'
@@ -6,7 +7,7 @@ import { LocaleProvider } from '@/context/locale-context'
 import Navbar from '@/components/ui/Navbar'
 import MotionProvider from '@/components/ui/MotionProvider'
 import {
-  CONTENTFUL_LOCALE,
+  LOCALE_BY_LANG,
   HOME_URL,
   HREFLANG,
   LANGS,
@@ -299,7 +300,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(lang)) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(buildJsonLd(lang)) }}
         />
         {/* Without JavaScript, scroll animations never run: show that content anyway */}
         <noscript>
@@ -315,7 +316,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           forcedTheme="dark"
           enableSystem={false}
         >
-          <LocaleProvider locale={CONTENTFUL_LOCALE[lang]}>
+          <LocaleProvider locale={LOCALE_BY_LANG[lang]}>
             <MotionProvider>
               <Navbar />
               <main>{children}</main>
