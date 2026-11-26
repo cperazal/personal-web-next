@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import { LocaleProvider } from '@/context/locale-context'
 import Navbar from '@/components/ui/Navbar'
 import MotionProvider from '@/components/ui/MotionProvider'
+import { GoogleTagManager } from '@next/third-parties/google'
 import {
   LOCALE_BY_LANG,
   HOME_URL,
@@ -20,6 +21,13 @@ import '../globals.css'
 
 /* ─── Site constants ─────────────────────────────────────────────────────── */
 const SITE_NAME = 'carlosperaza.dev'
+
+/** Google Tag Manager container (set only in Vercel Production). Validated so a
+ *  malformed value can never be injected into the page. */
+const GTM_ID = (() => {
+  const id = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID?.trim()
+  return id && /^GTM-[A-Z0-9]+$/i.test(id) ? id : null
+})()
 const FULL_NAME = 'Carlos Peraza'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
@@ -307,7 +315,22 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           <style>{'[style*="opacity:0"]{opacity:1!important;transform:none!important}'}</style>
         </noscript>
       </head>
+      {/* Google Tag Manager: official Next.js integration, loaded after the page is
+          interactive (doesn't block rendering/LCP). Production only: the ID exists
+          only in Vercel's Production environment. Not loaded in /admin. */}
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} dataLayer={{ site_language: lang }} />}
       <body>
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+              title="Google Tag Manager"
+            />
+          </noscript>
+        )}
         {/* Dark by default for everyone (the OS preference is ignored on purpose);
             visitors can switch to light and the choice is remembered. */}
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
