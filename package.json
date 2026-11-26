@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",
+    "@next/third-parties": "^15.5.29",
     "@sendgrid/mail": "^7.7.0",
     "@vercel/blob": "^2.9.0",
     "drizzle-orm": "^0.45.4",
